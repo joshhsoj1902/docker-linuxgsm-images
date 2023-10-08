@@ -1,6 +1,6 @@
 version: 2.1
 
-define: &images [gmod-base]
+define: &images [gmod-base, minecraft-base]
 
 executors:
   docker-publisher:
@@ -38,7 +38,7 @@ jobs:
     steps:
       - attach_workspace:
           at: /tmp/workspace
-      # - setup_remote_docker
+      - setup_remote_docker
       - run:
           name: Load archived Docker image
           command: docker load -i /tmp/workspace/image-<< parameters.dir >>.tar
@@ -57,7 +57,7 @@ jobs:
     executor: docker-publisher
     steps:
       - checkout
-      # - setup_remote_docker
+      - setup_remote_docker
       - run:
           name: "Pull image"
           command: |
