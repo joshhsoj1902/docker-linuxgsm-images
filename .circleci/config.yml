@@ -1,0 +1,96 @@
+version: 2.1
+
+define: &images [gmod-base]
+
+executors:
+  docker-publisher:
+    resource_class: "small"
+    environment:
+      IMAGE_NAME: joshhsoj1902/docker-linuxgsm-images
+    docker:
+      - image: joshhsoj1902/circleci-build-image:latest
+
+jobs:
+  build-docker:
+    parameters:
+      dir:
+        type: string
+    executor: docker-publisher
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: "Build image"
+          command: |
+            docker build -f images/<< parameters.dir >>/Dockerfile -t $IMAGE_NAME:latest-<< parameters.dir >> images/<< parameters.dir >>
+      - run:
+          name: Archive Docker image
+          command: docker save -o image-<< parameters.dir >>.tar $IMAGE_NAME
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./image-<< parameters.dir >>.tar
+  publish-docker-latest:
+    parameters:
+      dir:
+        type: string
+    executor: docker-publisher
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      # - setup_remote_docker
+      - run:
+          name: Load archived Docker image
+          command: docker load -i /tmp/workspace/image-<< parameters.dir >>.tar
+      - run:
+          name: Publish Docker Image to Docker Hub
+          command: |
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            IMAGE_TAG="0.0.${CIRCLE_BUILD_NUM}-<< parameters.dir >>"
+            docker tag $IMAGE_NAME:latest-<< parameters.dir >> $IMAGE_NAME:$IMAGE_TAG
+            docker push $IMAGE_NAME:latest-<< parameters.dir >>
+            docker push $IMAGE_NAME:$IMAGE_TAG
+  publish-docker-tag:
+    parameters:
+      dir:
+        type: string
+    executor: docker-publisher
+    steps:
+      - checkout
+      # - setup_remote_docker
+      - run:
+          name: "Pull image"
+          command: |
+            docker pull $IMAGE_NAME:latest-<< parameters.dir >>
+      - run:
+          name: Publish Docker Image to Docker Hub
+          command: |
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            IMAGE_TAG=${CIRCLE_TAG/v/''}
+            docker tag $IMAGE_NAME:latest $IMAGE_NAME:$IMAGE_TAG-<< parameters.dir >>
+            docker push $IMAGE_NAME:$IMAGE_TAG-<< parameters.dir >>
+workflows:
+  build:
+    jobs:
+      - build-docker:
+          matrix:
+            parameters:
+              dir: *images
+      - publish-docker-latest:
+          matrix:
+            parameters:
+              dir: *images
+          requires:
+            - build-docker
+          filters:
+            branches:
+              only: main
+      - publish-docker-tag:
+          matrix:
+            parameters:
+              dir: *images
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
