@@ -1,4 +1,4 @@
-FROM joshhsoj1902/docker-linuxgsm-scripts:1.0.0 AS scripts
+FROM joshhsoj1902/docker-linuxgsm-scripts:1.1.0 AS scripts
 FROM gameservermanagers/gameserver:pmc
 
 RUN apt-get update && apt-get install -y \
