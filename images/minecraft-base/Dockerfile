@@ -24,3 +24,6 @@ ENV LGSM_MINECRAFT_PLUGIN_DYNMAP_VERSION_ID=UXqPUg7D
 ENV LGSM_MINECRAFT_PLUGIN_DYNMAP_VERSION=Dynmap-3.7-beta-2-spigot.jar
 ENV LGSM_MINECRAFT_PLUGIN_ESSENTIALS_VERSION=2.20.1
 ENV LGSM_MINECRAFT_PLUGIN_UNIFIED_METRICS_VERSION=0.3.8
+
+# Disable auto update checks (For PaperMC the update fails resulting in the server not coming back up after the attempted update)
+ENV UPDATE_CHECK=90000000
