@@ -1,5 +1,5 @@
 FROM joshhsoj1902/docker-linuxgsm-scripts:1.2.0 AS scripts
-FROM gameservermanagers/gameserver:gmod@sha256:c9a76c441d96ec64bcfe6b8088ad025c4a7ebae224ea614109fc321e8863cf28
+FROM gameservermanagers/gameserver:gmod@sha256:18fe2ade280c1e822e37d867163512beef57892fba4856d40d330657aee1fd33
 
 # Install envsubt
 RUN apt-get update && apt-get install -y \
