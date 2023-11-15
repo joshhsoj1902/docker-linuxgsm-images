@@ -61,7 +61,7 @@ jobs:
       - run:
           name: "Pull image"
           command: |
-            docker pull $IMAGE_NAME:latest-<< parameters.dir >>
+            docker pull $IMAGE_NAME:latest-<< parameters.dir >> || true
       - run:
           name: Publish Docker Image to Docker Hub
           command: |
