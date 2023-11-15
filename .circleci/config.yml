@@ -1,6 +1,6 @@
 version: 2.1
 
-define: &images [gmod-base, minecraft-paper-base]
+define: &images [gmod-base, minecraft-paper-base, sdtd-base]
 
 executors:
   docker-publisher:
