@@ -1,6 +1,14 @@
 version: 2.1
 
-define: &images [gmod-base, minecraft-paper-base, sdtd-base]
+define:
+  &images [
+    factorio-base,
+    gmod-base,
+    minecraft-paper-base,
+    project-zombiod-base,
+    satisfactory-base,
+    sdtd-base,
+  ]
 
 executors:
   docker-publisher:
