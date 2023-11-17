@@ -1,5 +1,5 @@
 FROM joshhsoj1902/docker-linuxgsm-scripts:1.2.0 AS scripts
-FROM hairyhenderson/gomplate:v3.11.5 AS gomplate
+FROM hairyhenderson/gomplate:v3.11.6 AS gomplate
 
 FROM gameservermanagers/gameserver:sdtd
 
