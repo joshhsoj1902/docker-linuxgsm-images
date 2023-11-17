@@ -1,6 +1,9 @@
 FROM joshhsoj1902/docker-linuxgsm-scripts:1.2.0 AS scripts
+FROM hairyhenderson/gomplate:v3.11.5 AS gomplate
+
 FROM gameservermanagers/gameserver:sdtd
 
+COPY --from=gomplate /gomplate /bin/gomplate
 # Install envsubt
 RUN apt-get update && apt-get install -y \
     gettext-base \
