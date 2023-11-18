@@ -1,5 +1,5 @@
 FROM joshhsoj1902/docker-linuxgsm-scripts:1.2.0 AS scripts
-FROM gameservermanagers/gameserver:pmc@sha256:53c1f0d2aac9e0f21799c4939d329735f5c815798d0490075ea8edfd13f1b2d8
+FROM gameservermanagers/gameserver:pmc@sha256:ef5f8555aa43398c54bb7b66c36a84e71cab9f88f687b79d0de6f7cbbccdc49f
 
 RUN apt-get update && apt-get install -y \
     gettext-base \
