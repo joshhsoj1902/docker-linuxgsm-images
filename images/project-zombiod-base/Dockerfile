@@ -1,4 +1,4 @@
-FROM joshhsoj1902/docker-linuxgsm-scripts:1.2.0 AS scripts
+FROM joshhsoj1902/docker-linuxgsm-scripts:1.3.0 AS scripts
 FROM gameservermanagers/gameserver:pz
 
 # Install envsubt
