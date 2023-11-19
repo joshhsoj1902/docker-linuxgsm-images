@@ -17,6 +17,10 @@ executors:
       IMAGE_NAME: joshhsoj1902/docker-linuxgsm-images
     docker:
       - image: joshhsoj1902/circleci-build-image:latest
+  docker-cimg:
+    resource_class: "small"
+    docker:
+      - image: cimg/base:current
 
 jobs:
   build-docker:
@@ -78,11 +82,26 @@ jobs:
             docker tag $IMAGE_NAME:latest-<< parameters.dir >> $IMAGE_NAME:$IMAGE_TAG-<< parameters.dir >>
             docker push $IMAGE_NAME:$IMAGE_TAG-<< parameters.dir >>
   check-sdtd-config:
-    executor: docker-publisher
+    executor: docker-cimg
     steps:
+      - run: mkdir -p /tmp/serverconfig
+      - run:
+          name: install Gomplate
+          command: |
+            curl -o ~/gomplate -sSL https://github.com/hairyhenderson/gomplate/releases/download/v3.11.6/gomplate_linux-amd64-slim
+            chmod 755 ~/gomplate
       - checkout
-      - run: wget https://raw.githubusercontent.com/GameServerManagers/Game-Server-Configs/main/sdtd/serverconfig.xml
-      - run: diff -b serverconfig.xml stdt-base/serverfiles/sdtdserver.xml.gomplate
+      - run:
+          name: Download current LGSM serverconfig
+          command: wget -O /tmp/serverconfig/lgsm-serverconfig.xml https://raw.githubusercontent.com/GameServerManagers/Game-Server-Configs/main/sdtd/serverconfig.xml
+      - run:
+          name: Render default serverconfig
+          command: ~/gomplate -f images/sdtd-base/layers/001-base/serverfiles/sdtdserver.xml.gomplate -o /tmp/serverconfig/gomplate-serverconfig.xml
+      - store_artifacts:
+          path: /tmp/serverconfig
+      - run:
+          name: Diff two configs
+          command: diff -w --color=always --unified=3 /tmp/serverconfig/lgsm-serverconfig.xml /tmp/serverconfig/gomplate-serverconfig.xml
 
 workflows:
   build:
