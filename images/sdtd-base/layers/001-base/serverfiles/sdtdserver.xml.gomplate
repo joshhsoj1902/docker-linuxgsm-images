@@ -1,0 +1,231 @@
+<?xml version="1.0"?>
+<ServerSettings>
+	<!-- GENERAL SERVER SETTINGS -->
+
+	<!-- Server representation -->
+	<property name="ServerName"	value="{{getenv "LGSM_SERVER_NAME" "My Game Host"}}"/>					<!-- Whatever you want the name of the server
+	to be. -->
+	<property name="ServerDescription" value="{{getenv "LGSM_SERVER_DESCRIPTION" "A 7 Days to Die server"}}"/> <!-- Whatever you want the
+	server description to be, will be shown in the server browser.  -->
+  <property name="ServerWebsiteURL" value="{{getenv "LGSM_SERVER_WEBSITE_URL" ""}}"/>					    <!-- Website URL for the server, will be shown in the
+	serverbrowser as a clickable link -->
+  <property name="ServerPassword" value="{{getenv "LGSM_SERVER_PASSWORD" ""}}"/>		                    <!-- Password to gain entry to the server -->
+	<property name="ServerLoginConfirmationText" value="" />					                                            <!-- If set the user will see the message
+	during joining the server and has to confirm it before continuing. For more complex changes to
+	this window you can change the "serverjoinrulesdialog" window in XUi -->
+	<property name="Region"	value="NorthAmericaEast" />												<!-- The region this server is in. Values:
+	NorthAmericaEast, NorthAmericaWest, CentralAmerica, SouthAmerica, Europe, Russia, Asia,
+	MiddleEast, Africa, Oceania -->
+	<property name="Language"	value="English" />														<!-- Primary language for players on this server.
+	Values: Use any language name that you would users expect to search for. Should be the English
+	name of the language, e.g. not "Deutsch" but "German" -->
+
+	<!-- Networking -->
+  <property name="ServerPort" value="{{getenv "LGSM_SERVER_PORT" "26900"}}"/>	                        <!-- Port you want the server to listen on. Keep it in
+	the ranges 26900 to 26905 or 27015 to 27020 if you want PCs on the same LAN to find it as a LAN
+	server. -->
+	<property name="ServerVisibility"	value="{{getenv "LGSM_SERVER_VISIBILITY" "2"}}"/>			            <!-- Visibility of this server: 2 = public, 1 = only
+	shown to friends, 0 = not listed. As you are never friend of a dedicated server setting this to
+	"1" will only work when the first player connects manually by IP. -->
+  <property name="ServerDisabledNetworkProtocols"	value="{{getenv "LGSM_SERVER_DISABLED_NETWORK_PROTOCOLS" "SteamNetworking"}}"/>	<!-- Networking
+	protocols that should not be used. Separated by comma. Possible values: LiteNetLib,
+	SteamNetworking. Dedicated servers should disable SteamNetworking if there is no NAT router in
+	between your users and the server or when port-forwarding is set up correctly -->
+	<property name="ServerMaxWorldTransferSpeedKiBs" value="{{getenv "LGSM_SERVER_MAX_WORLD_TRANSFER_SPEED_KIBS" "512"}}"/>	<!-- Maximum (!) speed in kiB/s the
+	world is transferred at to a client on first connect if it does not have the world yet. Maximum is
+	about 1300 kiB/s, even if you set a higher value. -->
+
+	<!-- Slots -->
+  <property name="ServerMaxPlayerCount" value="{{getenv "LGSM_SERVER_MAX_PLAYER_COUNT" "8"}}"/>					<!-- Maximum Concurrent Players -->
+  <property name="ServerReservedSlots" value="{{getenv "LGSM_SERVER_RESERVED_SLOTS" "0"}}"/>					<!-- Out of the MaxPlayerCount this many slots
+	can only be used by players with a specific permission level -->
+  <property name="ServerReservedSlotsPermission" value="{{getenv "LGSM_SERVER_RESERVED_SLOTS_PERMISSION" "100"}}"/>		<!-- Required permission level to use
+	reserved slots above -->
+  <property name="ServerAdminSlots" value="{{getenv "LGSM_SERVER_ADMIN_SLOTS" "0"}}"/>					    <!-- This many admins can still join even if the
+	server has reached MaxPlayerCount -->
+  <property name="ServerAdminSlotsPermission" value="{{getenv "LGSM_SERVER_ADMIN_SLOTS_PERMISSION" "0"}}"/>			<!-- Required permission level to use the
+	admin slots above -->
+
+	<!-- Admin interfaces -->
+	<property name="WebDashboardEnabled" value="{{getenv "LGSM_SERVER_WEB_DASHBOARD_ENABLED" "false"}}"/>		<!-- Enable/disable the web dashboard -->
+	<property name="WebDashboardPort"	value="{{getenv "LGSM_SERVER_WEB_DASHBOARD_PORT" "8080"}}"/>			<!-- Port of the web dashboard -->
+	<property name="WebDashboardUrl" value="{{getenv "LGSM_SERVER_WEB_DASHBOARD_URL" ""}}"/>					<!-- External URL to the web dashboard if not just
+	using the public IP of the server, e.g. if the web dashboard is behind a reverse proxy. Needs to
+	be the full URL, like "https://domainOfReverseProxy.tld:1234/". Can be left empty if directly
+	using the public IP and dashboard port -->
+	<property name="EnableMapRendering" value="{{getenv "LGSM_SERVER_ENABLE_MAP_RENDERING" "false"}}"/>			<!-- Enable/disable rendering of the map to
+	tile images while exploring it. This is used e.g. by the web dashboard to display a view of the
+	map. -->
+
+	<property name="TelnetEnabled" value="{{getenv "LGSM_TELNET_ENABLED" "true"}}"/>				        <!-- Enable/Disable the telnet -->
+  <property name="TelnetPort" value="{{getenv "LGSM_TELNET_PORT" "8081"}}"/>				            <!-- Port of the telnet server -->
+  <property name="TelnetPassword" value="{{getenv "LGSM_TELNET_PASSWORD" ""}}"/>			    			<!-- Password to gain entry to telnet interface. If no
+	password is set the server will only listen on the local loopback interface -->
+	<property name="TelnetFailedLoginLimit"	value="{{getenv "LGSM_TELNET_FAILED_LOGIN_LIMIT" "10"}}"/>				<!-- After this many wrong passwords from a
+	single remote client the client will be blocked from connecting to the Telnet interface -->
+	<property name="TelnetFailedLoginsBlocktime" value="{{getenv "LGSM_TELNET_FAILED_LOGIN_BLOCKTIME" "10"}}"/>			<!-- How long will the block persist (in
+	seconds) -->
+
+	<property name="TerminalWindowEnabled" value="{{getenv "LGSM_TERMINAL_WINDOW_ENABLED" "true"}}"/>				<!-- Show a terminal window for log output /
+	command input (Windows only) -->
+
+	<!-- Folder and file locations -->
+	<property name="AdminFileName" value="serveradmin.xml"/>	<!-- Server admin file name. Path
+	relative to the SaveGameFolder -->
+	<!-- <property name="UserDataFolder"                            value="absolute path" /> -->    <!-- Use this to override where the
+	server stores all generated data, including RWG generated worlds. Do not forget to uncomment the
+	entry! -->
+	<!-- <property name="SaveGameFolder"                            value="absolute path" /> -->    <!-- Use this to only override the save
+	game path. Do not forget to uncomment the entry! -->
+
+	<!-- Other technical settings -->
+	<property name="EACEnabled"	value="{{getenv "LGSM_EAC_ENABLED" "true"}}"/>				            <!-- Enables/Disables EasyAntiCheat -->
+	<property name="HideCommandExecutionLog" value="{{getenv "LGSM_HIDE_COMMAND_EXECUTION_LOG" "0"}}"/>				<!-- Hide logging of command execution. 0 =
+	show everything, 1 = hide only from Telnet/ControlPanel, 2 = also hide from remote game clients, 3
+	= hide everything -->
+	<property name="MaxUncoveredMapChunksPerPlayer" value="{{getenv "LGSM_MAX_UNCOVERED_MAP_CHUNK_PER_PLAYER" "131072"}}"/>	<!-- Override how many chunks can
+	be uncovered on the ingame map by each player. Resulting max map file size limit per player is (x
+	* 512 Bytes), uncovered area is (x * 256 m²). Default 131072 means max 32 km² can be uncovered at
+	any time -->
+	<property name="PersistentPlayerProfiles"	value="{{getenv "LGSM_PERSISTENT_PLAYER_PROFILES" "false"}}" />			<!-- If disabled a player can join with
+	any selected profile. If true they will join with the last profile they joined with -->
+
+
+	<!-- GAMEPLAY -->
+
+	<!-- World -->
+	<property name="GameWorld" value="{{getenv "LGSM_GAME_WORLD" "Navezgane"}}"/>			        <!-- "RWG" (see WorldGenSeed and WorldGenSize
+	options below) or any already existing world name in the Worlds folder (currently shipping with
+	e.g. "Navezgane", "PREGEN01", ...) -->
+	<property name="WorldGenSeed" value="{{getenv "LGSM_WORLD_GEN_SEED" "asdf"}}"/>				<!-- If RWG this is the seed for the generation of
+	the new world. If a world with the resulting name already exists it will simply load it -->
+	<property name="WorldGenSize"	value="{{getenv "LGSM_WORLD_GEN_SIZE" "6144"}}"/>				<!-- If RWG, this controls the width and height of
+	the created world. Officially supported sizes are between 6144 and 10240 and must be a multiple of
+	2048, e.g. 6144, 8192, 10240. -->
+	<property name="GameName" value="{{getenv "LGSM_GAME_NAME" "My Game"}}"/>			        <!-- Whatever you want the game name to be. This
+	affects the save game name as well as the seed used when placing decoration (trees etc) in the
+	world. It does not control the generic layout of the world if creating an RWG world -->
+	<property name="GameMode" value="{{getenv "LGSM_GAME_MODE" "GameModeSurvival"}}"/>	    <!-- GameModeSurvival -->
+
+	<!-- Difficulty -->
+	<property name="GameDifficulty" value="{{getenv "LGSM_GAME_DIFFICULTY" "1"}}"/>  				        <!-- 0 - 5, 0=easiest, 5=hardest -->
+	<property name="BlockDamagePlayer" value="{{getenv "LGSM_BLOCK_DAMAGE_PLAYER" "100"}}" />				<!-- How much damage do players to blocks
+	(percentage in whole numbers) -->
+	<property name="BlockDamageAI" value="{{getenv "LGSM_BLOCK_DAMAGE_AI" "100"}}" />				<!-- How much damage do AIs to blocks (percentage in
+	whole numbers) -->
+	<property name="BlockDamageAIBM" value="{{getenv "LGSM_BLOCK_DAMAGE_AIBM" "100"}}" />				<!-- How much damage do AIs during blood moons to
+	blocks (percentage in whole numbers) -->
+	<property name="XPMultiplier"	value="{{getenv "LGSM_XP_MULTIPLIER" "100"}}" />				<!-- XP gain multiplier (percentage in whole numbers) -->
+	<property name="PlayerSafeZoneLevel" value="{{getenv "LGSM_PLAYERS_SAFE_ZONE_LEVEL" "5"}}" />				<!-- If a player is less or equal this level he
+	will create a safe zone (no enemies) when spawned -->
+	<property name="PlayerSafeZoneHours" value="{{getenv "LGSM_PLAYERS_SAFE_ZONE_HOURS" "5"}}" />				<!-- Hours in world time this safe zone exists -->
+
+	<!--  -->
+	<property name="BuildCreate" value="{{getenv "LGSM_BUILD_CREATE" "false"}}" />			<!-- cheat mode on/off -->
+	<property name="DayNightLength"	value="{{getenv "LGSM_DAY_NIGHT_LENGTH" "60"}}" />				<!-- real time minutes per in game day: 60 minutes -->
+	<property name="DayLightLength" value="{{getenv "LGSM_DAY_LIGHT_LENGTH" "18"}}" />				<!-- in game hours the sun shines per day: 18 hours
+	day light per in game day -->
+	<property name="DropOnDeath" value="{{getenv "LGSM_DROP_ON_DEATH" "1"}}" />				<!-- 0 = nothing, 1 = everything, 2 = toolbelt only, 3 =
+	backpack only, 4 = delete all -->
+	<property name="DropOnQuit" value="{{getenv "LGSM_DROP_ON_QUIT" "0"}}" />				<!-- 0 = nothing, 1 = everything, 2 = toolbelt only, 3 =
+	backpack only -->
+	<property name="BedrollDeadZoneSize" value="{{getenv "LGSM_BEDROLL_DEAD_ZONE_SIZE" "15"}}"/>					<!-- Size (box "radius", so a box with 2 times
+	the given value for each side's length) of bedroll deadzone, no zombies will spawn inside this
+	area, and any cleared sleeper volumes that touch a bedroll deadzone will not spawn after they've
+	been cleared. -->
+	<property name="BedrollExpiryTime" value="{{getenv "LGSM_BEDROLL_EXPIRY_TIME" "45"}}" />				<!-- Number of real world days a bedroll stays
+	active after owner was last online -->
+
+<!-- Performance related -->
+	<property name="MaxSpawnedZombies" value="{{getenv "LGSM_MAX_SPAWNED_ZOMBIES" "64"}}"/>				<!-- This setting covers the entire map. There can
+	only be this many zombies on the entire map at one time. Changing this setting has a huge impact
+	on performance. -->
+	<property name="MaxSpawnedAnimals" value="{{getenv "LGSM_MAX_SPAWNED_ANIMALS" "50"}}"/>				<!-- If your server has a large number of players
+	you can increase this limit to add more wildlife. Animals don't consume as much CPU as zombies.
+	NOTE: That this doesn't cause more animals to spawn arbitrarily: The biome spawning system only
+	spawns a certain number of animals in a given area, but if you have lots of players that are all
+	spread out then you may be hitting the limit and can increase it. -->
+	<property name="ServerMaxAllowedViewDistance"	value="{{getenv "LGSM_SERVER_MAX_ALLOWED_VIEW_DISTANCE" "12"}}" />				<!-- Max viewdistance a client may
+	request (6 - 12). High impact on memory usage and performance. -->
+	<property name="MaxQueuedMeshLayers" value="1000" />			 <!-- Maximum amount of Chunk mesh layers that
+	can be enqueued during mesh generation. Reducing this will improve memory usage but may increase
+	Chunk generation time -->
+
+	<!-- Zombie settings -->
+	<property name="EnemySpawnMode" value="{{getenv "LGSM_ENEMY_SPAWN_MODE" "true"}}" />				<!-- Enable/Disable enemy spawning -->
+	<property name="EnemyDifficulty" value="{{getenv "LGSM_ENEMY_DIFFICULTY" "0"}}" />				<!-- 0 = Normal, 1 = Feral -->
+	<property name="ZombieFeralSense"	value="0" />				<!-- 0-3 (Off, Day, Night, All) -->
+	<property name="ZombieMove"	value="{{getenv "LGSM_ZOMBIE_MOVE" "0"}}" />				<!-- 0-4 (walk, jog, run, sprint, nightmare) -->
+	<property name="ZombieMoveNight" value="{{getenv "LGSM_ZOMBIE_MOVE_NIGHT" "3"}}" />				<!-- 0-4 (walk, jog, run, sprint, nightmare) -->
+	<property name="ZombieFeralMove" value="{{getenv "LGSM_ZOMBIE_FERAL_MOVE" "3"}}" />				<!-- 0-4 (walk, jog, run, sprint, nightmare) -->
+	<property name="ZombieBMMove" value="{{getenv "LGSM_ZOMBIE_BM_MOVE" "3"}}" />				<!-- 0-4 (walk, jog, run, sprint, nightmare) -->
+	<property name="BloodMoonFrequency"	value="{{getenv "LGSM_BLOOD_MOON_FREQUENCY" "7"}}" />				<!-- What frequency (in days) should a blood moon
+	take place. Set to "0" for no blood moons -->
+	<property name="BloodMoonRange"	value="{{getenv "LGSM_BLOOD_MOON_RANGE" "0"}}" />				<!-- How many days can the actual blood moon day
+	randomly deviate from the above setting. Setting this to 0 makes blood moons happen exactly each
+	Nth day as specified in BloodMoonFrequency -->
+	<property name="BloodMoonWarning"	value="{{getenv "LGSM_BLOOD_MOON_WARNING" "8"}}" />				<!-- The Hour number that the red day number begins
+	on a blood moon day. Setting this to -1 makes the red never show.  -->
+	<property name="BloodMoonEnemyCount" value="{{getenv "LGSM_BLOOD_MOON_ENEMY_COUNT" "8"}}" />				<!-- This is the number of zombies that can be
+	alive (spawned at the same time) at any time PER PLAYER during a blood moon horde, however,
+	MaxSpawnedZombies overrides this number in multiplayer games. Also note that your game stage sets
+	the max number of zombies PER PARTY. Low game stage values can result in lower number of zombies
+	than the BloodMoonEnemyCount setting. Changing this setting has a huge impact on performance. -->
+
+	<!-- Loot -->
+	<property name="LootAbundance" value="{{getenv "LGSM_LOOT_ABUNDANCE" "100"}}" />				<!-- percentage in whole numbers -->
+	<property name="LootRespawnDays" value="{{getenv "LGSM_LOOT_RESPAWN_DAYS" "7"}}" /> 				<!-- days in whole numbers -->
+	<property name="AirDropFrequency"	value="{{getenv "LGSM_AIR_DROP_FREQUENCY" "72"}}"/>				<!-- How often airdrop occur in game-hours, 0 ==
+	never -->
+	<property name="AirDropMarker" value="{{getenv "LGSM_AIR_DROP_MAKER" "true"}}"/>				<!-- Sets if a marker is added to map/compass for
+	air drops. -->
+
+	<!-- Multiplayer -->
+	<property name="PartySharedKillRange"	value="{{getenv "LGSM_PARTY_SHARED_KILL_RANGE" "100"}}"/>				<!-- The distance you must be within to
+	receive party shared kill xp and quest party kill objective credit. -->
+	<property name="PlayerKillingMode" value="{{getenv "LGSM_PLAYER_KILLING_MODE" "3"}}" />				<!-- Player Killing Settings (0 = No Killing, 1 =
+	Kill Allies Only, 2 = Kill Strangers Only, 3 = Kill Everyone) -->
+
+	<!-- Land claim options -->
+	<property name="LandClaimCount" value="{{getenv "LGSM_LAND_CLAIM_COUNT" "3"}}"/>					<!-- Maximum allowed land claims per player. -->
+	<property name="LandClaimSize" value="{{getenv "LGSM_LAND_CLAIM_SIZE" "41"}}"/>				<!-- Size in blocks that is protected by a keystone -->
+	<property name="LandClaimDeadZone" value="{{getenv "LGSM_LAND_CLAIM_DEAD_ZONE" "30"}}"/>				<!-- Keystones must be this many blocks apart
+	(unless you are friends with the other player) -->
+	<property name="LandClaimExpiryTime" value="{{getenv "LGSM_LAND_CLAIM_EXPIREY_TIME" "7"}}"/>					<!-- The number of real world days a player can
+	be offline before their claims expire and are no longer protected -->
+	<property name="LandClaimDecayMode" value="{{getenv "LGSM_LAND_CLAIM_DECAY_MODE" "0"}}"/>					<!-- Controls how offline players land claims
+	decay. 0=Slow (Linear) , 1=Fast (Exponential), 2=None (Full protection until claim is expired). -->
+	<property name="LandClaimOnlineDurabilityModifier" value="{{getenv "LGSM_LAND_CLAIM_ONLINE_DURABILITY_MODIFIER" "4"}}"/>				<!-- How much protected claim area
+	block hardness is increased when a player is online. 0 means infinite (no damage will ever be
+  taken). Default is 4x -->
+	<property name="LandClaimOfflineDurabilityModifier" value="{{getenv "LGSM_LAND_CLAIM_OFFLINE_DURABILITY_MODIFIER" "4"}}"/>				<!-- How much protected claim area
+	block hardness is increased when a player is offline. 0 means infinite (no damage will ever be
+  taken). Default is 4x -->
+	<property name="LandClaimOfflineDelay" value="0"/>					<!-- The number of minutes after a player logs
+	out that the land claim area hardness transitions from online to offline. Default is 0 -->
+
+
+	<property name="DynamicMeshEnabled"	value="true"/>				<!-- Is Dynamic Mesh system enabled -->
+	<property name="DynamicMeshLandClaimOnly"	value="true"/>				<!-- Is Dynamic Mesh system only active
+	in player LCB areas -->
+	<property name="DynamicMeshLandClaimBuffer" value="3"/>					<!-- Dynamic Mesh LCB chunk radius -->
+	<property name="DynamicMeshMaxItemCache" value="3"/>					<!-- How many items can be processed
+	concurrently, higher values use more RAM -->
+
+	<property name="TwitchServerPermission"	value="90"/>				<!-- Required permission level to use twitch
+	integration on the server -->
+	<property name="TwitchBloodMoonAllowed" value="false"/>				<!-- If the server allows twitch actions
+  during a blood moon. This could cause server lag with extra zombies being spawned during blood
+  moon. -->
+
+	<property name="MaxChunkAge" value="-1"/>				<!-- The number of in-game days which must pass since
+	visiting a chunk before it will reset to its original state if not revisited or protected (e.g. by
+	a land claim or bedroll being in close proximity). -->
+	<property name="SaveDataLimit" value="-1"/>				<!-- The maximum disk space allowance for each saved
+	game in megabytes (MB). Saved chunks may be forceably reset to their original states to free up
+	space when this limit is reached. Negative values disable the limit. -->
+
+	<!-- There are several game settings that you cannot change when starting a new game.
+	You can use console commands to change at least some of them ingame.
+	setgamepref BedrollDeadZoneSize 30 -->
+</ServerSettings>
