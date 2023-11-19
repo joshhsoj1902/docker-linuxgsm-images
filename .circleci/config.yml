@@ -77,6 +77,13 @@ jobs:
             IMAGE_TAG=${CIRCLE_TAG/v/''}
             docker tag $IMAGE_NAME:latest-<< parameters.dir >> $IMAGE_NAME:$IMAGE_TAG-<< parameters.dir >>
             docker push $IMAGE_NAME:$IMAGE_TAG-<< parameters.dir >>
+  check-sdtd-config:
+    executor: docker-publisher
+    steps:
+      - checkout
+      - run: wget https://raw.githubusercontent.com/GameServerManagers/Game-Server-Configs/main/sdtd/serverconfig.xml
+      - run: diff -b serverconfig.xml stdt-base/serverfiles/sdtdserver.xml.gomplate
+
 workflows:
   build:
     jobs:
@@ -102,3 +109,6 @@ workflows:
               only: /^v.*/
             branches:
               ignore: /.*/
+  checks:
+    jobs:
+      - check-sdtd-config
