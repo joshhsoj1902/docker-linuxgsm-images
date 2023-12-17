@@ -90,22 +90,27 @@ workflows:
   build:
     jobs:
       - build-docker:
+          name: build << matrix.dir >>
           matrix:
             parameters:
               dir: *images
       - publish-docker-latest:
+          name: publish latest << matrix.dir >>
           matrix:
             parameters:
               dir: *images
           requires:
-            - build-docker
+            - build << matrix.dir >>
           filters:
             branches:
               only: main
       - publish-docker-tag:
+          name: publish tag << matrix.dir >>
           matrix:
             parameters:
               dir: *images
+          requires:
+            - publish latest << matrix.dir >>
           filters:
             tags:
               only: /^v.*/
