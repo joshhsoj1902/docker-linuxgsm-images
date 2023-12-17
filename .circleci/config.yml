@@ -12,15 +12,13 @@ define:
 
 executors:
   docker-publisher:
-    resource_class: "small"
+    machine: true
+    resource_class: joshhsoj1902/ubuntu
     environment:
       IMAGE_NAME: joshhsoj1902/docker-linuxgsm-images
-    docker:
-      - image: joshhsoj1902/circleci-build-image:latest
   docker-cimg:
-    resource_class: "small"
-    docker:
-      - image: cimg/base:current
+    machine: true
+    resource_class: joshhsoj1902/ubuntu
 
 jobs:
   build-docker:
@@ -30,30 +28,16 @@ jobs:
     executor: docker-publisher
     steps:
       - checkout
-      - setup_remote_docker
       - run:
           name: "Build image"
           command: |
             docker build -f images/<< parameters.dir >>/Dockerfile -t $IMAGE_NAME:latest-<< parameters.dir >> images/<< parameters.dir >>
-      - run:
-          name: Archive Docker image
-          command: docker save -o image-<< parameters.dir >>.tar $IMAGE_NAME
-      - persist_to_workspace:
-          root: .
-          paths:
-            - ./image-<< parameters.dir >>.tar
   publish-docker-latest:
     parameters:
       dir:
         type: string
     executor: docker-publisher
     steps:
-      - attach_workspace:
-          at: /tmp/workspace
-      - setup_remote_docker
-      - run:
-          name: Load archived Docker image
-          command: docker load -i /tmp/workspace/image-<< parameters.dir >>.tar
       - run:
           name: Publish Docker Image to Docker Hub
           command: |
@@ -69,7 +53,6 @@ jobs:
     executor: docker-publisher
     steps:
       - checkout
-      - setup_remote_docker
       - run:
           name: "Pull image"
           command: |
