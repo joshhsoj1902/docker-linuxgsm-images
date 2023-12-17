@@ -1,12 +1,15 @@
 FROM joshhsoj1902/docker-linuxgsm-scripts:1.3.0 AS scripts
+FROM hairyhenderson/gomplate:v3.11.6 AS gomplate
+
 FROM gameservermanagers/gameserver:pmc@sha256:146f2407be1605fb208c1c76a84840453dc9c8e8a86e23af1e8eb683bbba2cf3
+
+# Override entrypoint-user to support hooks
+COPY --from=scripts /entrypoint-user.sh /app/entrypoint-user.sh
+COPY --from=gomplate /gomplate /bin/gomplate
 
 RUN apt-get update && apt-get install -y \
     gettext-base \
     && rm -rf /var/lib/apt/lists/*
-
-# Override entrypoint-user to support hooks
-COPY --from=scripts /entrypoint-user.sh /app/entrypoint-user.sh
 
 # Setup Layers
 COPY --from=scripts /scripts/apply-overlay.sh /app/hooks/pre-install/50-apply-overlay.sh
@@ -16,6 +19,8 @@ COPY --from=scripts /scripts/resolve-templates.sh /app/hooks/post-install/51-res
 ENV LGSM_HELPER_OVERLAY_SRC=/layers
 ENV LGSM_HELPER_OVERLAY_DEST=/data
 ENV LGSM_HELPER_TEMPLATE_EXTENSION=.overlay-template
+ENV LGSM_HELPER_GOMPLATE_EXTENSION=.gomplate
+
 
 # Download Plugins
 COPY --from=scripts /scripts/minecraft-install-plugins.sh /app/hooks/post-install/52-install-plugins.sh

@@ -1,0 +1,20 @@
+version: "3.4"
+volumes:
+  fastdl_assets:
+  gmod_data:
+services:
+  setup_fastdl_assets:
+    image: busybox
+    volumes:
+      - fastdl_assets:/mnt/html
+    command: /bin/sh -c 'mkdir -p /mnt/html/fastdl && chown -R 1000:1000 /mnt/html'
+  linuxgsm:
+    image: joshhsoj1902/docker-linuxgsm-images:latest-factorio-base
+    environment:
+      - DOWNLOADURI="http://${NGINX_HOST:-localhost}:${NGINX_PORT:-8080}/fastdl"
+      - NGINX_PORT=${NGINX_PORT:-8080}
+    volumes:
+      - ${GAMEDATA_PATH:-gmod_data}:/data
+    network_mode: host
+    restart: always
+
