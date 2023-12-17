@@ -1,0 +1,9 @@
+version: "3.4"
+services:
+  linuxgsm:
+    image: joshhsoj1902/docker-linuxgsm-images:latest-sdtd-base
+    network_mode: host
+    restart: always
+    environment:
+      - LGSM_SERVER_NAME=LinuxGSM
+

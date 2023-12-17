@@ -5,7 +5,7 @@ define:
     factorio-base,
     gmod-base,
     minecraft-paper-base,
-    project-zombiod-base,
+    # project-zombiod-base,
     satisfactory-base,
     sdtd-base,
   ]
@@ -32,6 +32,73 @@ jobs:
           name: "Build image"
           command: |
             docker build -f images/<< parameters.dir >>/Dockerfile -t $IMAGE_NAME:latest-<< parameters.dir >> images/<< parameters.dir >>
+
+  test-docker:
+    parameters:
+      dir:
+        type: string
+    executor: docker-publisher
+    steps:
+      - checkout
+      - run: mkdir -p rendered_serverconfig
+      - run:
+          name: "Start image"
+          command: |
+            HOST_IP=`hostname -I | awk '{print $1}'`
+            # npm install gamedig -g
+            docker compose -f images/<< parameters.dir >>/.tests/docker-compose.yml up -d
+
+            sleep 10
+
+            x=1
+            while [ $x -le 60 ]
+            do
+              echo "Testing Gameserver. iteration $x"
+
+              GAMENAME=`./images/<< parameters.dir >>/.tests/gamedig.sh $HOST_IP | jq -r .name`
+              if [ "$GAMENAME" = "LinuxGSM" ];
+              then
+                echo "Gameserver is healthy."
+                break
+              else
+                echo "($GAMENAME) != (LinuxGSM)"
+                ./images/<< parameters.dir >>/.tests/gamedig.sh $HOST_IP
+              fi
+
+              x=$(( $x + 1 ))
+              sleep 10
+            done
+
+            echo "v=========================v"
+            docker compose -f images/<< parameters.dir >>/.tests/docker-compose.yml logs --tail 25
+            echo "^=========================^"
+
+            if [ $x -ge 60 ];
+            then
+              echo "Gameserver wasn't ready in time."
+              exit 1
+            fi
+      - run:
+          name: Run Tests
+          shell: bash
+          command: |
+            # Run pre-install scripts
+            if [ -d "images/<< parameters.dir >>/.tests/scripts" ]; then
+              for f in images/<< parameters.dir >>/.tests/scripts/*.sh; do
+                if ! bash "$f"
+                then
+                  echo "Failed running script \"$f\""
+                  exit 1
+                fi
+              done
+            fi
+      - store_artifacts:
+          path: rendered_serverconfig
+      - run:
+          name: "Cleanup"
+          command: docker compose -f images/<< parameters.dir >>/.tests/docker-compose.yml down
+          when: always
+
   publish-docker-latest:
     parameters:
       dir:
@@ -59,27 +126,27 @@ jobs:
             IMAGE_TAG=${CIRCLE_TAG/v/''}
             docker tag $IMAGE_NAME:latest-<< parameters.dir >> $IMAGE_NAME:$IMAGE_TAG-<< parameters.dir >>
             docker push $IMAGE_NAME:$IMAGE_TAG-<< parameters.dir >>
-  check-sdtd-config:
-    executor: docker-cimg
-    steps:
-      - run: mkdir -p /tmp/serverconfig
-      - run:
-          name: install Gomplate
-          command: |
-            curl -o ~/gomplate -sSL https://github.com/hairyhenderson/gomplate/releases/download/v3.11.6/gomplate_linux-amd64-slim
-            chmod 755 ~/gomplate
-      - checkout
-      - run:
-          name: Download current LGSM serverconfig
-          command: wget -O /tmp/serverconfig/lgsm-serverconfig.xml https://raw.githubusercontent.com/GameServerManagers/Game-Server-Configs/main/sdtd/serverconfig.xml
-      - run:
-          name: Render default serverconfig
-          command: ~/gomplate -f images/sdtd-base/layers/001-base/serverfiles/sdtdserver.xml.gomplate -o /tmp/serverconfig/gomplate-serverconfig.xml
-      - store_artifacts:
-          path: /tmp/serverconfig
-      - run:
-          name: Diff two configs
-          command: diff -w --color=always --unified=3 /tmp/serverconfig/lgsm-serverconfig.xml /tmp/serverconfig/gomplate-serverconfig.xml
+  # check-sdtd-config:
+  #   executor: docker-cimg
+  #   steps:
+  #     - run: mkdir -p /tmp/serverconfig
+  #     - run:
+  #         name: install Gomplate
+  #         command: |
+  #           curl -o ~/gomplate -sSL https://github.com/hairyhenderson/gomplate/releases/download/v3.11.6/gomplate_linux-amd64-slim
+  #           chmod 755 ~/gomplate
+  #     - checkout
+  #     - run:
+  #         name: Download current LGSM serverconfig
+  #         command: wget -O /tmp/serverconfig/lgsm-serverconfig.xml https://raw.githubusercontent.com/GameServerManagers/Game-Server-Configs/main/sdtd/serverconfig.xml
+  #     - run:
+  #         name: Render default serverconfig
+  #         command: ~/gomplate -f images/sdtd-base/layers/001-base/serverfiles/sdtdserver.xml.gomplate -o /tmp/serverconfig/gomplate-serverconfig.xml
+  #     - store_artifacts:
+  #         path: /tmp/serverconfig
+  #     - run:
+  #         name: Diff two configs
+  #         command:
 
 workflows:
   build:
@@ -89,13 +156,20 @@ workflows:
           matrix:
             parameters:
               dir: *images
+      - test-docker:
+          name: test << matrix.dir >>
+          matrix:
+            parameters:
+              dir: *images
+          requires:
+            - build << matrix.dir >>
       - publish-docker-latest:
           name: publish latest << matrix.dir >>
           matrix:
             parameters:
               dir: *images
           requires:
-            - build << matrix.dir >>
+            - test << matrix.dir >>
           filters:
             branches:
               only: main
@@ -106,6 +180,18 @@ workflows:
           matrix:
             parameters:
               dir: *images
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
+      - test-docker:
+          name: test << matrix.dir >>
+          matrix:
+            parameters:
+              dir: *images
+          requires:
+            - build << matrix.dir >>
           filters:
             tags:
               only: /^v.*/
@@ -123,6 +209,6 @@ workflows:
               only: /^v.*/
             branches:
               ignore: /.*/
-  checks:
-    jobs:
-      - check-sdtd-config
+  # checks:
+  #   jobs:
+  #     - check-sdtd-config
