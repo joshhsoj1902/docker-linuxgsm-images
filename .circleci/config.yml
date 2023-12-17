@@ -99,6 +99,18 @@ workflows:
           filters:
             branches:
               only: main
+  tag-release:
+    jobs:
+      - build-docker:
+          name: build << matrix.dir >>
+          matrix:
+            parameters:
+              dir: *images
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
       - publish-docker-tag:
           name: publish tag << matrix.dir >>
           matrix:
