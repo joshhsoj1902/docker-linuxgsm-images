@@ -203,7 +203,7 @@ workflows:
             parameters:
               dir: *images
           requires:
-            - build << matrix.dir >>
+            - test << matrix.dir >>
           filters:
             tags:
               only: /^v.*/
