@@ -12,8 +12,16 @@
         "digest"
       ],
       "matchCurrentVersion": "!/^0/",
-      "pinDigests": true,
       "automerge": true
+    },
+    {
+      "datasource": "docker",
+      "depName": "gameservermanagers/gameserver",
+      "matchUpdateTypes": [
+        "pin",
+        "digest"
+      ],
+      "pinDigests": true
     }
   ]
 }
