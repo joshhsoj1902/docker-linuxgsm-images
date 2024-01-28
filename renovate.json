@@ -15,8 +15,8 @@
       "automerge": true
     },
     {
-      "datasource": "docker",
-      "depName": "gameservermanagers/gameserver",
+      "matchDatasources": ["docker"],
+      "matchDepNames": ["gameservermanagers/gameserver"],
       "matchUpdateTypes": [
         "pin",
         "digest"
