@@ -5,3 +5,4 @@
 ## These settings will apply to a specific instance.
 
 branch={{getenv "LGSM_SERVER_BRANCH" "public"}}
+querydelay={{getenv "LGSM_QUERY_DELAY" "1"}}

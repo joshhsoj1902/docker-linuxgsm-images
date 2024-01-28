@@ -28,3 +28,6 @@ ENV LGSM_HELPER_TEMPLATE_EXTENSION=.overlay-template
 # ENV LGSM_GAME_NAME="My Game"
 # https://steamdb.info/app/251570/depots/
 # ENV LGSM_SERVER_BRANCH=alpha21.1
+
+# Set this to at least 30 the frist time a world is being generated
+# ENV LGSM_QUERY_DELAY=60
