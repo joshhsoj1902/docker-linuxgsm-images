@@ -205,11 +205,11 @@
 	out that the land claim area hardness transitions from online to offline. Default is 0 -->
 
 
-	<property name="DynamicMeshEnabled"	value="true"/>				<!-- Is Dynamic Mesh system enabled -->
-	<property name="DynamicMeshLandClaimOnly"	value="true"/>				<!-- Is Dynamic Mesh system only active
+	<property name="DynamicMeshEnabled"	value="{{getenv "LGSM_DYNAMIC_MESH_ENABLED" "true"}}"/>				<!-- Is Dynamic Mesh system enabled -->
+	<property name="DynamicMeshLandClaimOnly"	value="{{getenv "LGSM_DYNAMIC_MESH_LAND_CLAIM_ONLY" "true"}}"/>				<!-- Is Dynamic Mesh system only active
 	in player LCB areas -->
-	<property name="DynamicMeshLandClaimBuffer" value="3"/>					<!-- Dynamic Mesh LCB chunk radius -->
-	<property name="DynamicMeshMaxItemCache" value="3"/>					<!-- How many items can be processed
+	<property name="DynamicMeshLandClaimBuffer" value="{{getenv "LGSM_DYNAMIC_MESH_LAND_CLAIM_BUFFER" "3"}}"/>					<!-- Dynamic Mesh LCB chunk radius -->
+	<property name="DynamicMeshMaxItemCache" value="{{getenv "LGSM_DYNAMIC_MESH_MAX_ITEMS_CACHE" "3"}}"/>					<!-- How many items can be processed
 	concurrently, higher values use more RAM -->
 
 	<property name="TwitchServerPermission"	value="90"/>				<!-- Required permission level to use twitch
