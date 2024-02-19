@@ -8,6 +8,7 @@ define:
     # project-zombiod-base,
     satisfactory-base,
     sdtd-base,
+    sdtd-a19,
   ]
 
 executors:
@@ -42,7 +43,7 @@ jobs:
       - checkout
       - run: mkdir -p rendered_serverconfig
       - run:
-          name: "Start image"
+          name: "Start & Test image"
           command: |
             HOST_IP=`hostname -I | awk '{print $1}'`
             # npm install gamedig -g
@@ -75,8 +76,10 @@ jobs:
 
             if [ $x -ge 60 ];
             then
-              echo "Gameserver wasn't ready in time."
-              exit 1
+              echo "================================="
+              echo "GAMESERVER DIDN'T START PROPERLY."
+              echo "Running other tests anyway".
+              echo "================================="
             fi
 
             echo "Gameserver is ready. Running tests"
@@ -109,21 +112,12 @@ jobs:
               done
             fi
 
-
-      - run:
-          name: Run Tests
-          shell: bash
-          command: |
-            # Run pre-install scripts
-            if [ -d "images/<< parameters.dir >>/.tests/scripts" ]; then
-              for f in images/<< parameters.dir >>/.tests/scripts/*.sh; do
-                if ! bash "$f"
-                then
-                  echo "Failed running script \"$f\""
-                  exit 1
-                fi
-              done
+            if [ $x -ge 60 ];
+            then
+              echo "Exit with failure because server never started."
+              exit 1
             fi
+
       - store_artifacts:
           path: rendered_serverconfig
       - run:
