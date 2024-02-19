@@ -43,7 +43,7 @@ jobs:
       - checkout
       - run: mkdir -p rendered_serverconfig
       - run:
-          name: "Start image"
+          name: "Start & Test image"
           command: |
             HOST_IP=`hostname -I | awk '{print $1}'`
             # npm install gamedig -g
@@ -76,23 +76,48 @@ jobs:
 
             if [ $x -ge 60 ];
             then
-              echo "Gameserver wasn't ready in time."
-              exit 1
+              echo "================================="
+              echo "GAMESERVER DIDN'T START PROPERLY."
+              echo "Running other tests anyway".
+              echo "================================="
             fi
-      - run:
-          name: Run Tests
-          shell: bash
-          command: |
-            # Run pre-install scripts
-            if [ -d "images/<< parameters.dir >>/.tests/scripts" ]; then
-              for f in images/<< parameters.dir >>/.tests/scripts/*.sh; do
+
+            echo "Gameserver is ready. Running tests"
+
+            if [ -d "images/<< parameters.dir >>/.tests/scripts/local" ]; then
+              echo "Local tests found"
+
+              for f in images/<< parameters.dir >>/.tests/scripts/local/*.sh; do
                 if ! bash "$f"
                 then
-                  echo "Failed running script \"$f\""
+                  echo "Test Failed \"$f\""
                   exit 1
                 fi
               done
             fi
+
+            if [ -d "images/<< parameters.dir >>/.tests/scripts/docker" ]; then
+              echo "Docker tests found"
+
+              for f in images/<< parameters.dir >>/.tests/scripts/docker/*.sh; do
+
+                base_name=$(basename ${f})
+                docker compose -f images/<< parameters.dir >>/.tests/docker-compose.yml cp $f linuxgsm:/tmp/
+
+                if ! docker compose -f images/<< parameters.dir >>/.tests/docker-compose.yml exec linuxgsm bash /tmp/$base_name
+                then
+                  echo "Test Failed \"$f\""
+                  exit 1
+                fi
+              done
+            fi
+
+            if [ $x -ge 60 ];
+            then
+              echo "Exit with failure because server never started."
+              exit 1
+            fi
+
       - store_artifacts:
           path: rendered_serverconfig
       - run:
