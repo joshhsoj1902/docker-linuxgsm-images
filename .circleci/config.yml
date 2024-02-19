@@ -78,6 +78,38 @@ jobs:
               echo "Gameserver wasn't ready in time."
               exit 1
             fi
+
+            echo "Gameserver is ready. Running tests"
+
+            if [ -d "images/<< parameters.dir >>/.tests/scripts/local" ]; then
+              echo "Local tests found"
+
+              for f in images/<< parameters.dir >>/.tests/scripts/local/*.sh; do
+                if ! bash "$f"
+                then
+                  echo "Test Failed \"$f\""
+                  exit 1
+                fi
+              done
+            fi
+
+            if [ -d "images/<< parameters.dir >>/.tests/scripts/docker" ]; then
+              echo "Docker tests found"
+
+              for f in images/<< parameters.dir >>/.tests/scripts/docker/*.sh; do
+
+                base_name=$(basename ${f})
+                docker compose -f images/<< parameters.dir >>/.tests/docker-compose.yml cp $f linuxgsm:/tmp/
+
+                if ! docker compose -f images/<< parameters.dir >>/.tests/docker-compose.yml exec linuxgsm bash /tmp/$base_name
+                then
+                  echo "Test Failed \"$f\""
+                  exit 1
+                fi
+              done
+            fi
+
+
       - run:
           name: Run Tests
           shell: bash
