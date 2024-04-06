@@ -1,7 +1,7 @@
 FROM joshhsoj1902/docker-linuxgsm-scripts:1.4.0 AS scripts
 FROM hairyhenderson/gomplate:v3.11.7 AS gomplate
 
-FROM gameservermanagers/gameserver:pmc@sha256:f777d994d2c6a98d3a41a300d5e9bdba84d42679322791b5e341f1721f44f66d
+FROM gameservermanagers/gameserver:pmc@sha256:43ce62628f68525745e3ec7dbabf1673ba4bb026183af9b9897710eeedfcac0b
 
 # Override entrypoint-user to support hooks
 COPY --from=scripts /entrypoint-user.sh /app/entrypoint-user.sh
