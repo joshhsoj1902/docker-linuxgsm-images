@@ -1,4 +1,4 @@
-FROM joshhsoj1902/docker-linuxgsm-scripts:1.4.0 AS scripts
+FROM joshhsoj1902/docker-linuxgsm-scripts:1.5.0 AS scripts
 FROM hairyhenderson/gomplate:v3.11.7 AS gomplate
 
 FROM gameservermanagers/gameserver:pz
