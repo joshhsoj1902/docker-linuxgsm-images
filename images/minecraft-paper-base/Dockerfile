@@ -1,7 +1,11 @@
-FROM joshhsoj1902/docker-linuxgsm-scripts:1.4.0 AS scripts
+FROM joshhsoj1902/docker-linuxgsm-scripts:1.5.0 AS scripts
 FROM hairyhenderson/gomplate:v3.11.7 AS gomplate
 
 FROM gameservermanagers/gameserver:pmc@sha256:896e1c745e691d6d9ad95f574c3af260d89056a0e4e8e9d2bd716b45b5e7526d
+
+# Upgrade java version (remove this if the base image is updated)
+RUN apt-get update && sudo apt install openjdk-21-jdk -y \
+    && rm -rf /var/lib/apt/lists/*
 
 # Override entrypoint-user to support hooks
 COPY --from=scripts /entrypoint-user.sh /app/entrypoint-user.sh
