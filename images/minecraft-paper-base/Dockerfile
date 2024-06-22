@@ -1,7 +1,7 @@
 FROM joshhsoj1902/docker-linuxgsm-scripts:1.5.0 AS scripts
 FROM hairyhenderson/gomplate:v3.11.7 AS gomplate
 
-FROM gameservermanagers/gameserver:pmc@sha256:c644a23bf1a2a01825a78723f26e8fcacdbf2510a0d18efa5dbb94bf6deeb898
+FROM gameservermanagers/gameserver:pmc@sha256:2acec3e02fed97706dd7af394119377c3ddeed66be78e722ed1b7426196f0bf8
 
 # Upgrade java version (remove this if the base image is updated)
 RUN apt-get update && sudo apt install openjdk-21-jdk -y \
