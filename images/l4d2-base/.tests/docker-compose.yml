@@ -1,0 +1,11 @@
+version: "3.4"
+services:
+  linuxgsm:
+    image: joshhsoj1902/docker-linuxgsm-images:latest-l4d2-base
+    # volumes:
+      # - ${GAMEDATA_PATH:-./gamedata}:/data
+    # ports:
+    #   - "27015:27015/tcp"
+    #   - "27015:27015/udp"
+    network_mode: host
+    restart: always
