@@ -13,11 +13,11 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Setup FastDL
-COPY --from=scripts /scripts/auto-fastdl.sh /app/hooks/post-install/80-auto-fastdl.sh
+# COPY --from=scripts /scripts/auto-fastdl.sh /app/hooks/post-install/80-auto-fastdl.sh
 
-# Setup ulib
-COPY --from=scripts /scripts/mod-install.sh /app/hooks/post-install/10-mod-install.sh
-ENV LGSM_HELPER_MODS=ulib,ulx
+# # Setup ulib
+# COPY --from=scripts /scripts/mod-install.sh /app/hooks/post-install/10-mod-install.sh
+# ENV LGSM_HELPER_MODS=ulib,ulx
 
 # Setup Layers
 COPY --from=scripts /scripts/apply-overlay.sh /app/hooks/pre-install/50-apply-overlay.sh
