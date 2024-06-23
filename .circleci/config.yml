@@ -109,7 +109,7 @@ jobs:
       - run:
           name: "Build image"
           command: |
-            docker build -f images/<< parameters.dir >>/Dockerfile -t $IMAGE_NAME:latest-<< parameters.dir >> images/<< parameters.dir >>
+            IMAGE_DIR=<< parameters.dir >> ./do build-game
 
   test-docker-game:
     parameters:
