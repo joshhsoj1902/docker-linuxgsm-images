@@ -1,4 +1,4 @@
-FROM hairyhenderson/gomplate:v3.11.7 AS gomplate
+FROM hairyhenderson/gomplate:v4.0.0 AS gomplate
 
 FROM gameservermanagers/gameserver:gmod@sha256:675db73fa4cfa7b31a23d30878848e5cc6597ad109562f62428b5159b82508bd
 ARG IMAGE_DIR
