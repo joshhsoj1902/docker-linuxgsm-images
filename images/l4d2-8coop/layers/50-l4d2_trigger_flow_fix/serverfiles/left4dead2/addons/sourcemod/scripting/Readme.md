@@ -1,3 +1,7 @@
+#Readme
+
+Needed fot 8 player co-op
+
 This should be this plugin:
 https://forums.alliedmods.net/showthread.php?p=2786925
 

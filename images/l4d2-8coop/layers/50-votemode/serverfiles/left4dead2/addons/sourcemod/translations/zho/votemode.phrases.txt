@@ -1,0 +1,43 @@
+"Phrases"
+{
+	"VoteMode_Force"
+	{
+		"zho"	"強制遊戲模式:"
+	}
+	"VoteMode_Vote"
+	{
+		"zho"	"遊戲模式投票:"
+	}
+	"VoteMode_Pass"
+	{
+		"zho"	"管理員以一票通過了投票."
+	}
+	"VoteMode_Veto"
+	{
+		"zho"	"管理員以一票否決了投票."
+	}
+	"VoteMode_InProgress"
+	{
+		"zho"	"投票已在進行中!"
+	}
+	"VoteMode_Started"
+	{
+		"zho"	"已開始投票以改變遊戲模式為:"
+	}
+	"VoteMode_Change"
+	{
+		"zho"	"遊戲模式改變為:"
+	}
+	"VoteMode_Voted"
+	{
+		"zho"	"已為更改遊戲模式投票."
+	}
+	"VoteMode_Changing"
+	{
+		"zho"	"正在更改"
+	}
+	"VoteMode_Restarting"
+	{
+		"zho"	"地圖將在三秒後重啟..."
+	}
+}

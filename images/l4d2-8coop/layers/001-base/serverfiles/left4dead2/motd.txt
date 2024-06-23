@@ -1,1 +1,12 @@
-Testing123
+Hi Everyone!
+
+Press "y" to open chat
+
+Change campaign with "Call a vote" menu (hit Esc)
+Change map with "!maps" in chat. (supports custom campaigns)
+Change your character with "!csm" in chat.
+Change difficulty with "Call a vote" menu (hit Esc)
+
+Change mode (mutation) by typing "!sm_votemode" in chat
+
+
