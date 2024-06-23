@@ -1,14 +1,14 @@
-FROM joshhsoj1902/docker-linuxgsm-scripts:1.5.0 AS scripts
 FROM hairyhenderson/gomplate:v3.11.7 AS gomplate
 
 FROM gameservermanagers/gameserver:pmc@sha256:2acec3e02fed97706dd7af394119377c3ddeed66be78e722ed1b7426196f0bf8
+ARG IMAGE_DIR
 
 # Upgrade java version (remove this if the base image is updated)
 RUN apt-get update && sudo apt install openjdk-21-jdk -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Override entrypoint-user to support hooks
-COPY --from=scripts /entrypoint-user.sh /app/entrypoint-user.sh
+ADD scripts/entrypoints/entrypoint-user.sh /app/entrypoint-user.sh
 COPY --from=gomplate /gomplate /bin/gomplate
 
 RUN apt-get update && apt-get install -y \
@@ -16,10 +16,10 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Setup Layers
-COPY --from=scripts /scripts/apply-overlay.sh /app/hooks/pre-install/50-apply-overlay.sh
-COPY --from=scripts /scripts/apply-overlay.sh /app/hooks/post-install/50-apply-overlay.sh
-COPY --from=scripts /scripts/resolve-templates.sh /app/hooks/pre-install/51-resolve-templates.sh
-COPY --from=scripts /scripts/resolve-templates.sh /app/hooks/post-install/51-resolve-templates.sh
+ADD scripts/scripts/apply-overlay.sh /app/hooks/pre-install/50-apply-overlay.sh
+ADD scripts/scripts/apply-overlay.sh /app/hooks/post-install/50-apply-overlay.sh
+ADD scripts/scripts/resolve-templates.sh /app/hooks/pre-install/51-resolve-templates.sh
+ADD scripts/scripts/resolve-templates.sh /app/hooks/post-install/51-resolve-templates.sh
 ENV LGSM_HELPER_OVERLAY_SRC=/layers
 ENV LGSM_HELPER_OVERLAY_DEST=/data
 ENV LGSM_HELPER_TEMPLATE_EXTENSION=.overlay-template
@@ -27,7 +27,7 @@ ENV LGSM_HELPER_GOMPLATE_EXTENSION=.gomplate
 
 
 # Download Plugins
-COPY --from=scripts /scripts/minecraft-install-plugins.sh /app/hooks/post-install/52-install-plugins.sh
+ADD scripts/scripts/minecraft-install-plugins.sh /app/hooks/post-install/52-install-plugins.sh
 ## Set versions
 ENV LGSM_MINECRAFT_PLUGIN_DYNMAP_VERSION_ID=UXqPUg7D
 ENV LGSM_MINECRAFT_PLUGIN_DYNMAP_VERSION=Dynmap-3.7-beta-2-spigot.jar

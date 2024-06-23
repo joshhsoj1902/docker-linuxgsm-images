@@ -1,10 +1,10 @@
-FROM joshhsoj1902/docker-linuxgsm-scripts:1.5.0 AS scripts
 FROM hairyhenderson/gomplate:v3.11.7 AS gomplate
 
 FROM gameservermanagers/gameserver:sf
+ARG IMAGE_DIR
 
 # Override entrypoint-user to support hooks
-COPY --from=scripts /entrypoint-user.sh /app/entrypoint-user.sh
+ADD scripts/entrypoints/entrypoint-user.sh /app/entrypoint-user.sh
 COPY --from=gomplate /gomplate /bin/gomplate
 
 # Install envsubt
