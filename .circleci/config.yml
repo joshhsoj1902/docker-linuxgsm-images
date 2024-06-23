@@ -13,7 +13,7 @@ define:
   ]
 
 executors:
-  docker-publisher:
+  docker-game-publisher:
     machine: true
     resource_class: joshhsoj1902/ubuntu
     environment:
@@ -23,11 +23,11 @@ executors:
     resource_class: joshhsoj1902/ubuntu
 
 jobs:
-  build-docker:
+  build-docker-game:
     parameters:
       dir:
         type: string
-    executor: docker-publisher
+    executor: docker-game-publisher
     steps:
       - checkout
       - run:
@@ -35,11 +35,11 @@ jobs:
           command: |
             docker build -f images/<< parameters.dir >>/Dockerfile -t $IMAGE_NAME:latest-<< parameters.dir >> images/<< parameters.dir >>
 
-  test-docker:
+  test-docker-game:
     parameters:
       dir:
         type: string
-    executor: docker-publisher
+    executor: docker-game-publisher
     steps:
       - checkout
       - run: mkdir -p rendered_serverconfig
@@ -126,11 +126,11 @@ jobs:
           command: docker compose -f images/<< parameters.dir >>/.tests/docker-compose.yml down
           when: always
 
-  publish-docker-latest:
+  publish-docker-game-latest:
     parameters:
       dir:
         type: string
-    executor: docker-publisher
+    executor: docker-game-publisher
     steps:
       - run:
           name: Publish Docker Image to Docker Hub
@@ -140,11 +140,11 @@ jobs:
             docker tag $IMAGE_NAME:latest-<< parameters.dir >> $IMAGE_NAME:$IMAGE_TAG
             docker push $IMAGE_NAME:latest-<< parameters.dir >>
             docker push $IMAGE_NAME:$IMAGE_TAG
-  publish-docker-tag:
+  publish-docker-game-tag:
     parameters:
       dir:
         type: string
-    executor: docker-publisher
+    executor: docker-game-publisher
     steps:
       - run:
           name: Publish Docker Image to Docker Hub
@@ -178,19 +178,19 @@ jobs:
 workflows:
   build:
     jobs:
-      - build-docker:
+      - build-docker-game:
           name: build << matrix.dir >>
           matrix:
             parameters:
               dir: *images
-      - test-docker:
+      - test-docker-game:
           name: test << matrix.dir >>
           matrix:
             parameters:
               dir: *images
           requires:
             - build << matrix.dir >>
-      - publish-docker-latest:
+      - publish-docker-game-latest:
           name: publish latest << matrix.dir >>
           matrix:
             parameters:
@@ -202,7 +202,7 @@ workflows:
               only: main
   tag-release:
     jobs:
-      - build-docker:
+      - build-docker-game:
           name: build << matrix.dir >>
           matrix:
             parameters:
@@ -212,7 +212,7 @@ workflows:
               only: /^v.*/
             branches:
               ignore: /.*/
-      - test-docker:
+      - test-docker-game:
           name: test << matrix.dir >>
           matrix:
             parameters:
@@ -224,7 +224,7 @@ workflows:
               only: /^v.*/
             branches:
               ignore: /.*/
-      - publish-docker-tag:
+      - publish-docker-game-tag:
           name: publish tag << matrix.dir >>
           matrix:
             parameters:
