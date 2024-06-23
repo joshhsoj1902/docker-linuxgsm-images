@@ -1,4 +1,3 @@
-FROM joshhsoj1902/docker-linuxgsm-scripts:1.5.0 AS scripts
 FROM hairyhenderson/gomplate:v3.11.7 AS gomplate
 
 # https://forums.alliedmods.net/showthread.php?t=39439
@@ -42,9 +41,10 @@ ADD https://github.com/nosoop/SMExt-SourceScramble/releases/download/0.7.1.4/pac
 RUN tar -zxvf package.tar.gz
 
 FROM gameservermanagers/gameserver:l4d2
+ARG IMAGE_DIR
 
 # Override entrypoint-user to support hooks
-COPY --from=scripts /entrypoint-user.sh /app/entrypoint-user.sh
+COPY scripts/entrypoints/entrypoint-user.sh /app/entrypoint-user.sh
 COPY --from=gomplate /gomplate /bin/gomplate
 
 # Install envsubt
@@ -92,15 +92,15 @@ COPY --from=moyo ["/MoYu_Server_Stupid_Plugins/The Last Stand/l4d2_fix_changelev
 # COPY --from=scripts /scripts/auto-fastdl.sh /app/hooks/post-install/80-auto-fastdl.sh
 
 # Setup metamod & sourcemod
-COPY --from=scripts /scripts/mod-install.sh /app/hooks/post-install/10-mod-install.sh
+ADD scripts/scripts/mod-install.sh /app/hooks/post-install/10-mod-install.sh
 ENV LGSM_HELPER_MODS=metamodsource,sourcemod
 
 # Setup Layers
-ADD layers /layers
-COPY --from=scripts /scripts/apply-overlay.sh /app/hooks/pre-install/50-apply-overlay.sh
-COPY --from=scripts /scripts/apply-overlay.sh /app/hooks/post-install/50-apply-overlay.sh
-COPY --from=scripts /scripts/resolve-templates.sh /app/hooks/pre-install/51-resolve-templates.sh
-COPY --from=scripts /scripts/resolve-templates.sh /app/hooks/post-install/51-resolve-templates.sh
+ADD images/$IMAGE_DIR/layers /layers
+ADD scripts/scripts/apply-overlay.sh /app/hooks/pre-install/50-apply-overlay.sh
+ADD scripts/scripts/apply-overlay.sh /app/hooks/post-install/50-apply-overlay.sh
+ADD scripts/scripts/resolve-templates.sh /app/hooks/pre-install/51-resolve-templates.sh
+ADD scripts/scripts/resolve-templates.sh /app/hooks/post-install/51-resolve-templates.sh
 ENV LGSM_HELPER_OVERLAY_SRC=/layers
 ENV LGSM_HELPER_OVERLAY_DEST=/data
 ENV LGSM_HELPER_TEMPLATE_EXTENSION=.overlay-template
