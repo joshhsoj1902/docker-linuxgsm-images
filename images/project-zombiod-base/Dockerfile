@@ -14,6 +14,8 @@ RUN apt-get update && apt-get install -y \
 
 
 # Setup Layers
+ADD common/common.cfg.gomplate /layers/001-base/config-lgsm/pzserver/
+
 ENV LGSM_HELPER_OVERLAY_SRC=/layers
 ENV LGSM_HELPER_OVERLAY_DEST=/data
 ENV LGSM_HELPER_TEMPLATE_EXTENSION=.overlay-template

@@ -16,6 +16,8 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Setup Layers
+ADD common/common.cfg.gomplate /layers/001-base/config-lgsm/pmcserver/
+
 ADD scripts/scripts/apply-overlay.sh /app/hooks/pre-install/50-apply-overlay.sh
 ADD scripts/scripts/apply-overlay.sh /app/hooks/post-install/50-apply-overlay.sh
 ADD scripts/scripts/resolve-templates.sh /app/hooks/pre-install/51-resolve-templates.sh

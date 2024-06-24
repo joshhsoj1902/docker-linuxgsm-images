@@ -14,6 +14,8 @@ RUN apt-get update && apt-get install -y \
 
 # Setup Layers
 ADD images/$IMAGE_DIR/layers /layers
+ADD common/common.cfg.gomplate /layers/001-base/config-lgsm/sdtdserver/
+
 ADD scripts/scripts/apply-overlay.sh /app/hooks/pre-install/50-apply-overlay.sh
 ADD scripts/scripts/apply-overlay.sh /app/hooks/post-install/50-apply-overlay.sh
 ADD scripts/scripts/resolve-templates.sh /app/hooks/pre-install/51-resolve-templates.sh
