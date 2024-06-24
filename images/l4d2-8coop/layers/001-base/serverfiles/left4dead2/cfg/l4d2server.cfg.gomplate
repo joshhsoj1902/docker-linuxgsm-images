@@ -1,11 +1,11 @@
 // Hostname for server.
-hostname {{getenv "LGSM_SERVER_NAME" "LinuxGSM"}}
+hostname {{getenv "SERVERNAME" "LinuxGSM"}}
 
 // RCON - remote console password.
-rcon_password {{getenv "LGSM_RCON_PASSWORD" "ADMINPASSWORD"}}
+rcon_password {{getenv "RCON_PASSWORD" "ADMINPASSWORD"}}
 
 // Server password - for private servers.
-sv_password {{getenv "LGSM_SERVER_PASSWORD" ""}}
+sv_password {{getenv "SV_PASSWORD" ""}}
 
 // Server Logging
 log on
