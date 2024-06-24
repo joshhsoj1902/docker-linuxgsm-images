@@ -22,3 +22,46 @@ statusalert={{getenv "LGSM_STATUS_ALERT" "off"}}
 discordalert={{getenv "LGSM_DISCORD_ALERT" "off"}}
 discordwebhook={{getenv "LGSM_DISCORD_WEBHOOK" "webhook"}}
 
+# Email Alerts | https://docs.linuxgsm.com/alerts/email
+emailalert={{getenv "LGSM_EMAIL_ALERT" "off"}}
+email={{getenv "LGSM_EMAIL" "email@example.com"}}
+emailfrom={{getenv "LGSM_EMAIL_FROM" ""}}
+
+# Gotify Alerts | https://docs.linuxgsm.com/alerts/gotify
+gotifyalert={{getenv "LGSM_GOTIFY_ALERT" "off"}}
+gotifytoken={{getenv "LGSM_GOTIFY_TOKEN" "token"}}
+gotifywebhook={{getenv "LGSM_GOTIFY_WEBHOOK" "webhook"}}
+
+# IFTTT Alerts | https://docs.linuxgsm.com/alerts/ifttt
+iftttalert={{getenv "LGSM_IFTTT_ALERT" "off"}}
+ifttttoken={{getenv "LGSM_IFTTT_TOKEN" "accesstoken"}}
+iftttevent={{getenv "LGSM_IFTTT_EVENT" "linuxgsm_alert"}}
+
+# Pushbullet Alerts | https://docs.linuxgsm.com/alerts/pushbullet
+pushbulletalert={{getenv "LGSM_PUSH_BULLET_ALERT" "off"}}
+pushbullettoken={{getenv "LGSM_PUSH_BULLET_TOKEN" "accesstoken"}}
+channeltag={{getenv "LGSM_PUSH_BULLET_CHANNEL_TAG" ""}}
+
+# Pushover Alerts | https://docs.linuxgsm.com/alerts/pushover
+pushoveralert={{getenv "LGSM_PUSH_OVER_ALERT" "off"}}
+pushovertoken={{getenv "LGSM_PUSH_OVER_TOKEN" "accesstoken"}}
+pushoveruserkey={{getenv "LGSM_PUSH_OVER_USER_KEY" "userkey"}}
+
+# Rocket.Chat Alerts | https://docs.linuxgsm.com/alerts/rocket.chat
+rocketchatalert={{getenv "LGSM_ROCKET_CHAT_ALERT" "off"}}
+rocketchatwebhook={{getenv "LGSM_ROCKET_CHAT_WEBHOOK" "webhook"}}
+
+# Slack Alerts | https://docs.linuxgsm.com/alerts/slack
+slackalert={{getenv "LGSM_SLACK_ALERT" "off"}}
+slackwebhook={{getenv "LGSM_SLACK_WEBHOOK" "webhook"}}
+
+# Telegram Alerts | https://docs.linuxgsm.com/alerts/telegram
+# You can add a custom cURL string eg proxy (useful in Russia) in "curlcustomstring".
+# For example "--socks5 ipaddr:port" for socks5 proxy see more in "curl --help all".
+telegramapi={{getenv "LGSM_TELEGRAM_API" "api.telegram.org"}}
+telegramalert={{getenv "LGSM_TELEGRAM_ALERT" "off"}}
+telegramtoken={{getenv "LGSM_TELEGRAM_TOKEN" "accesstoken"}}
+telegramchatid={{getenv "LGSM_TELEGRAM_CHAT_ID" ""}}
+telegramthreadid={{getenv "LGSM_TELEGRAM_THREAD_ID" ""}}
+telegramsilentnotification={{getenv "LGSM_TELEGRAM_SILENT_NOTIFICATION" "false"}}
+curlcustomstring={{getenv "LGSM_TELEGRAM_CURL_CUSTOM_STRING" ""}}

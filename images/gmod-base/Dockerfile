@@ -20,6 +20,7 @@ ADD scripts/scripts/mod-install.sh /app/hooks/post-install/10-mod-install.sh
 ENV LGSM_HELPER_MODS=ulib,ulx
 
 # Setup Layers
+ADD common/common.cfg.gomplate /layers/001-base/config-lgsm/gmodserver/
 ADD scripts/scripts/apply-overlay.sh /app/hooks/pre-install/50-apply-overlay.sh
 ADD scripts/scripts/apply-overlay.sh /app/hooks/post-install/50-apply-overlay.sh
 ADD scripts/scripts/resolve-templates.sh /app/hooks/pre-install/51-resolve-templates.sh
