@@ -1,0 +1,24 @@
+#### LinuxGSM Settings ####
+
+## LinuxGSM Stats
+# Send useful stats to LinuxGSM developers.
+# https://docs.linuxgsm.com/configuration/linuxgsm-stats
+# (on|off)
+stats={{getenv "LGSM_STATS" "off"}}
+
+## Notification Alerts
+# (on|off)
+
+# Display IP | https://docs.linuxgsm.com/alerts#display-ip
+displayip={{getenv "LGSM_DISPLAY_IP" ""}}
+
+# More info | https://docs.linuxgsm.com/alerts#more-info
+postalert="{{getenv "LGSM_POST_ALERT" "off"}}"
+
+# Alert on Start/Stop/Restart
+statusalert={{getenv "LGSM_STATUS_ALERT" "off"}}
+
+# Discord Alerts | https://docs.linuxgsm.com/alerts/discord
+discordalert={{getenv "LGSM_DISCORD_ALERT" "off"}}
+discordwebhook={{getenv "LGSM_DISCORD_WEBHOOK" "webhook"}}
+

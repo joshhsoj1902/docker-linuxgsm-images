@@ -1,0 +1,8 @@
+#### Game Server Settings ####
+
+## Predefined Parameters | https://docs.linuxgsm.com/configuration/start-parameters
+ip={{getenv "LGSM_IP" "0.0.0.0"}}
+port={{getenv "LGSM_SERVER_PORT" "27015"}}
+clientport={{getenv "LGSM_CLIENT_PORT" "27005"}}
+defaultmap={{getenv "LGSM_DEFAULT_MAP" "c5m1_waterfront"}}
+maxplayers={{getenv "LGSM_MAX_PLAYERS" "8"}}
