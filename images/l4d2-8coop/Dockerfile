@@ -40,6 +40,10 @@ FROM ubuntu AS sourcescramble
 ADD https://github.com/nosoop/SMExt-SourceScramble/releases/download/0.7.1.4/package.tar.gz package.tar.gz
 RUN tar -zxvf package.tar.gz
 
+# Discord logger
+FROM bitnami/git AS discord
+RUN git clone https://github.com/Mbk10201/Discord_loggerv2.git
+
 FROM gameservermanagers/gameserver:l4d2
 ARG IMAGE_DIR
 
@@ -64,6 +68,8 @@ COPY --from=l4dplugins /L4D1_2-Plugins/l4dmultislots /layers/l4dtoolz/serverfile
 COPY --from=l4dplugins /L4D1_2-Plugins/l4dafkfix_deadbot /layers/l4dtoolz/serverfiles/left4dead2/addons/sourcemod
 
 COPY --from=l4d2plugins /L4D2-Plugins/lfd_both_fixUpgradePack /layers/l4dtoolz/serverfiles/left4dead2/addons/sourcemod
+
+COPY --from=discord /Discord_loggerv2/ /layers/discordlogger/serverfiles/left4dead2/addons/sourcemod
 
 COPY --from=left4fix ["/Left-4-fix/left 4 fix/Defib_Fix", "/layers/l4dtoolz/serverfiles/left4dead2/addons/sourcemod"]
 COPY --from=left4fix ["/Left-4-fix/left 4 fix/survivors/survivor_afk_fix", "/layers/l4dtoolz/serverfiles/left4dead2/addons/sourcemod"]
