@@ -10,6 +10,9 @@ services:
       # Setting a password currently causes LinuxGSM to fail to healthcheck the server
       # - SV_PASSWORD=""
       - LGSM_SERVER_PORT=27015
+      # - LGSM_L4D2_ADMIN_LIST=STEAM_1:0:1,STEAM_1:0:2,STEAM_1:0:3
+
+      # LGSM Alert realted settings
       # - LGSM_STATUS_ALERT="on"
       # - LGSM_DISCORD_ALERT="on"
       # - LGSM_DISCORD_WEBHOOK=""
