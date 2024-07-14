@@ -42,3 +42,8 @@
 //   "BAILOPAN"			"abc"	"Gab3n"		//name BAILOPAN, password "Gab3n": gets reservation, generic, kick
 //
 ////////////////////////////////
+{{ if env.Getenv "LGSM_L4D2_ADMIN_LIST" }}
+{{- range (getenv "LGSM_L4D2_ADMIN_LIST" | strings.Split ",") }}
+"{{.}}" "@Full Admins"
+{{- end}}
+{{ end }}
