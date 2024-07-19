@@ -1,1 +1,1 @@
-gamedig --type przomboid $1
+gamedig --type projectzomboid $1
