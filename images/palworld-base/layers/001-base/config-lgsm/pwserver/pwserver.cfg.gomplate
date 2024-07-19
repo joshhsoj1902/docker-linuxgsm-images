@@ -1,0 +1,7 @@
+#### Game Server Settings ####
+
+## Predefined Parameters | https://docs.linuxgsm.com/configuration/start-parameters
+ip={{getenv "LGSM_IP" "0.0.0.0"}}
+#adminpassword={{getenv "LGSM_ADMIN_PASSWORD" "CHANGE_ME"}}
+
+#startparameters="-servername ${selfname} -adminpassword ${adminpassword}"
