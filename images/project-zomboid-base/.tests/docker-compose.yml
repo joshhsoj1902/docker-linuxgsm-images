@@ -3,6 +3,7 @@ services:
   linuxgsm:
     image: joshhsoj1902/docker-linuxgsm-images:latest-project-zombiod-base
     environment:
+      - SERVERNAME=LinuxGSM
       - LGSM_ADMIN_PASSWORD=password
     network_mode: host
     restart: always
