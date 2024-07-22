@@ -1,7 +1,7 @@
 version: "3.4"
 services:
   linuxgsm:
-    image: joshhsoj1902/docker-linuxgsm-images:latest-project-zombiod-base
+    image: joshhsoj1902/docker-linuxgsm-images:latest-project-zomboid-base
     environment:
       - SERVERNAME=LinuxGSM
       - LGSM_ADMIN_PASSWORD=password
