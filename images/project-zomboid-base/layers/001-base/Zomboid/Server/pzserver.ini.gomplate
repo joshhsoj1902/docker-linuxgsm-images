@@ -103,7 +103,7 @@ MinutesPerPage={{getenv "LGSM_SERVER_MINUTES_PER_PAGE" "1.0"}}
 SaveWorldEveryMinutes={{getenv "LGSM_SERVER_SAVE_WORLD_EVERY_MINUTES" "0"}}
 
 # Both admins and players can claim safehouses
-PlayerSafehouse={{getenv "LGSM_SERVER_PLAYER_SERVERHOUSE" "false"}}
+PlayerSafehouse={{getenv "LGSM_SERVER_PLAYER_SAFEHOUSE" "false"}}
 
 # Only admins can claim safehouses
 AdminSafehouse={{getenv "LGSM_SERVER_ADMIN_SAFEHOUSE" "false"}}
