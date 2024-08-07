@@ -51,6 +51,8 @@
 	<property name="MaxChunkAge" value="-1"/>                            <!-- The number of in-game days which must pass since visiting a chunk before it will reset to its original state if not revisited or protected (e.g. by a land claim or bedroll being in close proximity). -->
     <property name="SaveDataLimit" value="-1"/>                            <!-- The maximum disk space allowance for each saved game in megabytes (MB). Saved chunks may be forceably reset to their original states to free up space when this limit is reached. Negative values disable the limit. -->
 
+
+
 	<!-- GAMEPLAY -->
 
 	<!-- World -->
