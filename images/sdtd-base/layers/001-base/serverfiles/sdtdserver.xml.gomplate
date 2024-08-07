@@ -51,7 +51,6 @@
 	<property name="MaxChunkAge" value="-1"/>                            <!-- The number of in-game days which must pass since visiting a chunk before it will reset to its original state if not revisited or protected (e.g. by a land claim or bedroll being in close proximity). -->
     <property name="SaveDataLimit" value="-1"/>                            <!-- The maximum disk space allowance for each saved game in megabytes (MB). Saved chunks may be forceably reset to their original states to free up space when this limit is reached. Negative values disable the limit. -->
 
-
 	<!-- GAMEPLAY -->
 
 	<!-- World -->
@@ -129,7 +128,6 @@
 	<property name="TwitchBloodMoonAllowed" value="false"/>				<!-- If the server allows twitch actions during a blood moon. This could cause server lag with extra zombies being spawned during blood moon. -->
 
 	<property name="QuestProgressionDailyLimit"             value="{{getenv "LGSM_QUEST_PROGRESSION_DAILY_LIMIT" "4"}}"/>                                     <!-- Limits the number of quests that contribute to quest tier progression a player can complete each day. Quests after the limit can still be completed for rewards. -->
-
 	<!-- There are several game settings that you cannot change when starting a new game.
 	You can use console commands to change at least some of them ingame.
 	setgamepref BedrollDeadZoneSize 30 -->
