@@ -1,7 +1,7 @@
 version: "3.4"
 services:
   linuxgsm:
-    image: joshhsoj1902/docker-linuxgsm-images:latest-sdtd-base
+    image: joshhsoj1902/docker-linuxgsm-images:latest-sdtd-a21
     network_mode: host
     restart: always
     environment:
