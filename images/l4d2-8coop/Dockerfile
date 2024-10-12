@@ -7,10 +7,15 @@ RUN tar -zxvf stripper.tar.gz
 
 # https://github.com/fbef0102/l4dtoolz/releases
 FROM kubeless/unzip:latest@sha256:e867f9b366ffb1a25f14baf83438db426ced4f7add56137b7300d32507229b5a AS l4dtoolz
-# renovate: datasource=github-tags depName=fbef0102/l4dtoolz versioning=loose
-ENV L4DTOOLZ_VERSION=1.0.0.2
-ADD https://github.com/fbef0102/l4dtoolz/releases/download/$L4DTOOLZ_VERSION/l4dtoolz-l4d2-linux.zip l4dtoolz.zip
-RUN unzip l4dtoolz.zip
+# renovate: datasource=github-tags depName=fbef0102/l4dtoolz versioning=semver-coerced
+# ENV L4DTOOLZ_VERSION=1.0.0.2
+# ADD https://github.com/fbef0102/l4dtoolz/releases/download/$L4DTOOLZ_VERSION/l4dtoolz-l4d2-linux.zip l4dtoolz.zip
+# RUN unzip l4dtoolz.zip
+
+# The github downloading worked fine, until the maintainer deleted the previous tag. I can't easily figure out what changed and
+# I don't have time right now to test the new release. so for now I'm using a copy of the previous tag I had downloaded.
+ARG IMAGE_DIR
+ADD images/$IMAGE_DIR/l4dtools /
 
 # https://github.com/SilvDev/Left4DHooks
 FROM bitnami/git AS left4dhooks
@@ -39,7 +44,9 @@ RUN unzip multicolors.zip
 
 # https://github.com/nosoop/SMExt-SourceScramble
 FROM ubuntu AS sourcescramble
-ADD https://github.com/nosoop/SMExt-SourceScramble/releases/download/0.7.1.4/package.tar.gz package.tar.gz
+# renovate: datasource=github-tags depName=fbef0102/l4dtoolz versioning=semver-coerced
+ENV SOURCESCRAMBLE_VERSION=0.7.1.4
+ADD https://github.com/nosoop/SMExt-SourceScramble/releases/download/$SOURCESCRAMBLE_VERSION/package.tar.gz package.tar.gz
 RUN tar -zxvf package.tar.gz
 
 # Discord logger
