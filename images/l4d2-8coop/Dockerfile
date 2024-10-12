@@ -8,7 +8,7 @@ RUN tar -zxvf stripper.tar.gz
 # https://github.com/fbef0102/l4dtoolz/releases
 FROM kubeless/unzip:latest@sha256:e867f9b366ffb1a25f14baf83438db426ced4f7add56137b7300d32507229b5a AS l4dtoolz
 # renovate: datasource=github-tags depName=fbef0102/l4dtoolz versioning=loose
-ENV L4DTOOLZ_VERSION=1.0.0.2
+ENV L4DTOOLZ_VERSION=1.1.0.2
 ADD https://github.com/fbef0102/l4dtoolz/releases/download/$L4DTOOLZ_VERSION/l4dtoolz-l4d2-linux.zip l4dtoolz.zip
 RUN unzip l4dtoolz.zip
 
