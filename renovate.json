@@ -29,7 +29,7 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": ["Dockerfile.template"],
+      "fileMatch": ["Dockerfile"],
       "matchStrings": [
         "#\\s*renovate:\\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.*?_VERSION=\\s*(?<currentValue>.*)\\s"
       ],
