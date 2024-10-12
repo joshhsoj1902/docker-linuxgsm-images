@@ -7,7 +7,9 @@ RUN tar -zxvf stripper.tar.gz
 
 # https://github.com/fbef0102/l4dtoolz/releases
 FROM kubeless/unzip:latest@sha256:e867f9b366ffb1a25f14baf83438db426ced4f7add56137b7300d32507229b5a AS l4dtoolz
-ADD https://github.com/fbef0102/l4dtoolz/releases/download/1.0.0.2/l4dtoolz-l4d2-linux.zip l4dtoolz.zip
+# renovate: datasource=github-releases depName=fbef0102/l4dtoolz
+ENV L4DTOOLZ_VERSION=1.0.0.2
+ADD https://github.com/fbef0102/l4dtoolz/releases/download/$L4DTOOLZ_VERSION/l4dtoolz-l4d2-linux.zip l4dtoolz.zip
 RUN unzip l4dtoolz.zip
 
 # https://github.com/SilvDev/Left4DHooks
