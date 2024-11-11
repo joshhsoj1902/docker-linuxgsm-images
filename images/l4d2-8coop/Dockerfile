@@ -1,4 +1,4 @@
-FROM hairyhenderson/gomplate:v3.11.7 AS gomplate
+FROM hairyhenderson/gomplate:v4.2.0 AS gomplate
 
 # https://forums.alliedmods.net/showthread.php?t=39439
 FROM ubuntu AS stripper
