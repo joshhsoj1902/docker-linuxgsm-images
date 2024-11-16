@@ -7,6 +7,10 @@
   "docker": {
     "pinDigests": true
   },
+  "ignorePaths": [
+    ".tests/docker-compose.yml"
+  ],
+
   "packageRules": [
     {
       "matchUpdateTypes": [
