@@ -4,13 +4,17 @@
     "config:base",
     "config:recommended"
   ],
+  "docker": {
+    "pinDigests": true,
+  },
   "packageRules": [
     {
       "matchUpdateTypes": [
         "minor",
         "patch",
         "pin",
-        "digest"
+        "digest",
+        "pinDigest"
       ],
       "matchCurrentVersion": "!/^0/",
       "automerge": true
@@ -20,7 +24,8 @@
       "matchDepNames": ["gameservermanagers/gameserver"],
       "matchUpdateTypes": [
         "pin",
-        "digest"
+        "digest",
+        "pinDigest"
       ],
       "pinDigests": true
     }
