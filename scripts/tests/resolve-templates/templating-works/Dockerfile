@@ -1,5 +1,5 @@
 FROM joshhsoj1902/docker-linuxgsm-scripts:testing AS scripts
-FROM ubuntu:22.04
+FROM ubuntu:24.04@sha256:278628f08d4979fb9af9ead44277dbc9c92c2465922310916ad0c46ec9999295
 
 # Install envsubt
 RUN apt-get update && apt-get install --no-install-recommends -y \
