@@ -9,7 +9,7 @@
   },
   "ignorePaths": [
     ".tests/docker-compose.yml",
-    "**/examples/**",
+    "**examples**/docker-compose.yml",
     "**/scripts/**"
   ],
 
