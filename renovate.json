@@ -9,8 +9,8 @@
   },
   "ignorePaths": [
     ".tests/docker-compose.yml",
-    "examples/*",
-    "scripts/*"
+    "/examples/**",
+    "/scripts/**"
   ],
 
   "packageRules": [
