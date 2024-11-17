@@ -8,7 +8,9 @@
     "pinDigests": true
   },
   "ignorePaths": [
-    ".tests/docker-compose.yml"
+    ".tests/docker-compose.yml",
+    "examples/",
+    "scripts/"
   ],
 
   "packageRules": [
