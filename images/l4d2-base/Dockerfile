@@ -12,13 +12,6 @@ RUN apt-get update && apt-get install -y \
     gettext-base \
     && rm -rf /var/lib/apt/lists/*
 
-# Setup FastDL
-# ADD scripts/scripts/auto-fastdl.sh /app/hooks/post-install/80-auto-fastdl.sh
-
-# # Setup ulib
-# ADD scripts/scripts/mod-install.sh /app/hooks/post-install/10-mod-install.sh
-# ENV LGSM_HELPER_MODS=ulib,ulx
-
 # Setup Layers
 ADD common/common.cfg.gomplate /layers/001-base/config-lgsm/l4d2server/
 

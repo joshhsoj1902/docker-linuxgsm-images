@@ -1,5 +1,3 @@
-FROM hairyhenderson/gomplate:v4.2.0@sha256:20af20cf82a5b8c14572f756af1ab89d25a42da33823b8eddbe058d60398927f AS gomplate
-
 # https://forums.alliedmods.net/showthread.php?t=39439
 FROM ubuntu@sha256:278628f08d4979fb9af9ead44277dbc9c92c2465922310916ad0c46ec9999295 AS stripper
 ADD http://www.bailopan.net/stripper/snapshots/1.2/stripper-1.2.2-git141-linux.tar.gz stripper.tar.gz
@@ -53,17 +51,8 @@ RUN tar -zxvf package.tar.gz
 FROM bitnami/git@sha256:cad8593b904daf66e2d83454440be2052bcb6f19d2ce87d2db5a0b1beef63331 AS discord
 RUN git clone https://github.com/Mbk10201/Discord_loggerv2.git
 
-FROM gameservermanagers/gameserver:l4d2@sha256:57dc7d5b5715a2fdae29d105945e6463873fb33a2bdf667082e7d88155f6e9e1
+FROM joshhsoj1902/docker-linuxgsm-images:latest-l4d2-base
 ARG IMAGE_DIR
-
-# Override entrypoint-user to support hooks
-COPY scripts/entrypoints/entrypoint-user.sh /app/entrypoint-user.sh
-COPY --from=gomplate /gomplate /bin/gomplate
-
-# Install envsubt
-RUN apt-get update && apt-get install -y \
-    gettext-base \
-    && rm -rf /var/lib/apt/lists/*
 
 COPY --from=stripper /addons /layers/stripper/serverfiles/left4dead2/addons
 COPY --from=l4dtoolz /addons /layers/l4dtoolz/serverfiles/left4dead2/addons
@@ -103,23 +92,9 @@ COPY --from=moyo ["/MoYu_Server_Stupid_Plugins/The Last Stand/l4d2_fix_changelev
 # COPY --from=unrar /addons/metamod/stripper.vdf /data/serverfiles/left4dead2/addons/metamod/stripper.vdf
 
 
-# Setup FastDL
-# COPY --from=scripts /scripts/auto-fastdl.sh /app/hooks/post-install/80-auto-fastdl.sh
-
 # Setup metamod & sourcemod
 ADD scripts/scripts/mod-install.sh /app/hooks/post-install/10-mod-install.sh
 ENV LGSM_HELPER_MODS=metamodsource,sourcemod
 
 # Setup Layers
 ADD images/$IMAGE_DIR/layers /layers
-ADD common/common.cfg.gomplate /layers/001-base/config-lgsm/l4d2server/
-
-ADD scripts/scripts/apply-overlay.sh /app/hooks/pre-install/50-apply-overlay.sh
-ADD scripts/scripts/apply-overlay.sh /app/hooks/post-install/50-apply-overlay.sh
-ADD scripts/scripts/resolve-templates.sh /app/hooks/pre-install/51-resolve-templates.sh
-ADD scripts/scripts/resolve-templates.sh /app/hooks/post-install/51-resolve-templates.sh
-ENV LGSM_HELPER_OVERLAY_SRC=/layers
-ENV LGSM_HELPER_OVERLAY_DEST=/data
-ENV LGSM_HELPER_TEMPLATE_EXTENSION=.overlay-template
-ENV LGSM_HELPER_GOMPLATE_EXTENSION=.gomplate
-
