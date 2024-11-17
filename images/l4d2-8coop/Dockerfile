@@ -1,7 +1,7 @@
-FROM hairyhenderson/gomplate:v4.2.0 AS gomplate
+FROM hairyhenderson/gomplate:v4.2.0@sha256:20af20cf82a5b8c14572f756af1ab89d25a42da33823b8eddbe058d60398927f AS gomplate
 
 # https://forums.alliedmods.net/showthread.php?t=39439
-FROM ubuntu AS stripper
+FROM ubuntu@sha256:278628f08d4979fb9af9ead44277dbc9c92c2465922310916ad0c46ec9999295 AS stripper
 ADD http://www.bailopan.net/stripper/snapshots/1.2/stripper-1.2.2-git141-linux.tar.gz stripper.tar.gz
 RUN tar -zxvf stripper.tar.gz
 
@@ -18,23 +18,23 @@ ARG IMAGE_DIR
 ADD images/$IMAGE_DIR/l4dtools /
 
 # https://github.com/SilvDev/Left4DHooks
-FROM bitnami/git AS left4dhooks
+FROM bitnami/git@sha256:cad8593b904daf66e2d83454440be2052bcb6f19d2ce87d2db5a0b1beef63331 AS left4dhooks
 RUN git clone https://github.com/SilvDev/Left4DHooks.git
 
 # https://github.com/fbef0102/L4D1_2-Plugins/tree/master
-FROM bitnami/git AS l4dplugins
+FROM bitnami/git@sha256:cad8593b904daf66e2d83454440be2052bcb6f19d2ce87d2db5a0b1beef63331 AS l4dplugins
 RUN git clone https://github.com/fbef0102/L4D1_2-Plugins.git
 
 # https://github.com/fbef0102/L4D2-Plugins/tree/master
-FROM bitnami/git AS l4d2plugins
+FROM bitnami/git@sha256:cad8593b904daf66e2d83454440be2052bcb6f19d2ce87d2db5a0b1beef63331 AS l4d2plugins
 RUN git clone https://github.com/fbef0102/L4D2-Plugins.git
 
 # https://github.com/LuxLuma/Left-4-fix
-FROM bitnami/git AS left4fix
+FROM bitnami/git@sha256:cad8593b904daf66e2d83454440be2052bcb6f19d2ce87d2db5a0b1beef63331 AS left4fix
 RUN git clone https://github.com/LuxLuma/Left-4-fix.git
 
 # https://github.com/Target5150/MoYu_Server_Stupid_Plugins
-FROM bitnami/git AS moyo
+FROM bitnami/git@sha256:cad8593b904daf66e2d83454440be2052bcb6f19d2ce87d2db5a0b1beef63331 AS moyo
 RUN git clone https://github.com/Target5150/MoYu_Server_Stupid_Plugins.git
 
 # https://github.com/fbef0102/L4D1_2-Plugins/releases/tag/Multi-Colors
@@ -43,17 +43,17 @@ ADD https://github.com/fbef0102/L4D1_2-Plugins/releases/download/Multi-Colors/mu
 RUN unzip multicolors.zip
 
 # https://github.com/nosoop/SMExt-SourceScramble
-FROM ubuntu AS sourcescramble
+FROM ubuntu@sha256:278628f08d4979fb9af9ead44277dbc9c92c2465922310916ad0c46ec9999295 AS sourcescramble
 # renovate: datasource=github-tags depName=fbef0102/l4dtoolz versioning=semver-coerced
 ENV SOURCESCRAMBLE_VERSION=0.7.1.4
 ADD https://github.com/nosoop/SMExt-SourceScramble/releases/download/$SOURCESCRAMBLE_VERSION/package.tar.gz package.tar.gz
 RUN tar -zxvf package.tar.gz
 
 # Discord logger
-FROM bitnami/git AS discord
+FROM bitnami/git@sha256:cad8593b904daf66e2d83454440be2052bcb6f19d2ce87d2db5a0b1beef63331 AS discord
 RUN git clone https://github.com/Mbk10201/Discord_loggerv2.git
 
-FROM gameservermanagers/gameserver:l4d2
+FROM gameservermanagers/gameserver:l4d2@sha256:57dc7d5b5715a2fdae29d105945e6463873fb33a2bdf667082e7d88155f6e9e1
 ARG IMAGE_DIR
 
 # Override entrypoint-user to support hooks
