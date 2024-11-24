@@ -2,7 +2,7 @@
 set -eu -o pipefail
 
 SUDO=''
-if (( $EUID != 0 && $USER != "circleci" )); then
+if [[ $EUID != 0 ]] && [[ "$USER" != "circleci" ]]; then
     SUDO='sudo'
 fi
 
