@@ -1,4 +1,3 @@
-version: "3.4"
 services:
   linuxgsm:
     image: joshhsoj1902/docker-linuxgsm-images:latest-sdtd-a21
