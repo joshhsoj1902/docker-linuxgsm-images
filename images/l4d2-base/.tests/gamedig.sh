@@ -1,1 +1,0 @@
-gamedig --type protocol-valve $1

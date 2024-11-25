@@ -1,1 +1,0 @@
-gamedig --type garrysmod $1
