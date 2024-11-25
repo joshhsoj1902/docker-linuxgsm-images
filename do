@@ -28,9 +28,18 @@ test() {
     x=1
     while [ $x -le 60 ]
     do
+        if [[ "$GAMEDIG_DISABLED" == "true" ]];
+        then
+            echo "Game doesn't support gamedig, skipping tests"
+            sleep 5
+            break
+        fi
+
         echo "Testing Gameserver. iteration $x"
 
         GAMENAME=`gamedig --type $GAMEDIG_TYPE $HOST_IP:$GAME_PORT $HOST_IP | jq -r .name`
+        gamedig --type $GAMEDIG_TYPE $HOST_IP:$GAME_PORT $HOST_IP
+
         if [ "$GAMENAME" = "LinuxGSM" ];
         then
             echo "Gameserver is healthy."
@@ -38,7 +47,7 @@ test() {
         else
             echo "($GAMENAME) != (LinuxGSM)"
         fi
-        gamedig --type $GAMEDIG_TYPE $HOST_IP:$GAME_PORT $HOST_IP
+
 
 
         x=$(( $x + 1 ))
