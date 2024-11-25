@@ -23,6 +23,11 @@ test() {
 
     source images/${IMAGE_DIR}/.tests/test.config
 
+    GAMEDIG_DISABLED="${GAMEDIG_DISABLED:-false}"
+    GAMEDIG_TYPE="${GAMEDIG_TYPE:-protocol-valve}"
+    GAME_PORT="${GAME_PORT:-27015}"
+
+
     sleep 10
 
     x=1
