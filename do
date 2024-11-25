@@ -37,8 +37,9 @@ test() {
             break
         else
             echo "($GAMENAME) != (LinuxGSM)"
-            gamedig --type $GAMEDIG_TYPE $HOST_IP:$GAME_PORT $HOST_IP
         fi
+        gamedig --type $GAMEDIG_TYPE $HOST_IP:$GAME_PORT $HOST_IP
+
 
         x=$(( $x + 1 ))
         sleep 10
