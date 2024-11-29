@@ -1,7 +1,12 @@
 services:
   linuxgsm:
     image: joshhsoj1902/docker-linuxgsm-images:latest-palworld-base
-    environment:
-      - LGSM_ADMIN_PASSWORD=password
+    # environment:
+      # - LGSM_ADMIN_PASSWORD=password
+      # - LGSM_DIFFICULTY=foo
     network_mode: host
     restart: always
+  testing:
+    image: gameservermanagers/gameserver:pw
+    profiles: [testing]
+

@@ -16,10 +16,15 @@ build() {
 
 }
 
+run() {
+    build
+    $SUDO docker compose -f images/${IMAGE_DIR}/.tests/docker-compose.yml up
+}
+
 test() {
     HOST_IP=`hostname -I | awk '{print $1}'`
     # npm install gamedig -g
-    $SUDO docker compose -f images/${IMAGE_DIR}/.tests/docker-compose.yml up -d
+    $SUDO docker compose -f images/${IMAGE_DIR}/.tests/docker-compose.yml --profile testing up -d
 
     source images/${IMAGE_DIR}/.tests/test.config
 
@@ -133,8 +138,19 @@ test() {
     fi
 
     $SUDO docker compose -f images/${IMAGE_DIR}/.tests/docker-compose.yml down
+}
 
+dockerCopyFrom() {
+    srcService=$1
+    srcPath=$2
+    destPath=$3
+    $SUDO docker compose -f images/${IMAGE_DIR}/.tests/docker-compose.yml cp $srcService:$srcPath $destPath
+}
 
+dockerExec() {
+    srcService=$1
+    command=$2
+    $SUDO docker compose -f images/${IMAGE_DIR}/.tests/docker-compose.yml exec $srcService $command
 }
 
 "$@"
