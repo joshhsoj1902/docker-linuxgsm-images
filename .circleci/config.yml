@@ -10,8 +10,8 @@ define:
     sdtd-base,
     sdtd-a19,
     sdtd-a21,
-    l4d2-base,
-    l4d2-8coop,
+    # l4d2-base,
+    # l4d2-8coop,
   ]
 
 executors:
