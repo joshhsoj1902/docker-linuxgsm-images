@@ -5,6 +5,7 @@ define:
     factorio-base,
     gmod-base,
     minecraft-paper-base,
+    palworld-base,
     project-zomboid-base,
     satisfactory-base,
     sdtd-base,

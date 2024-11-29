@@ -16,48 +16,79 @@ build() {
 
 }
 
+run() {
+    build
+    $SUDO docker compose -f images/${IMAGE_DIR}/.tests/docker-compose.yml up
+}
+
 test() {
     HOST_IP=`hostname -I | awk '{print $1}'`
     # npm install gamedig -g
-    $SUDO docker compose -f images/${IMAGE_DIR}/.tests/docker-compose.yml up -d
+    $SUDO docker compose -f images/${IMAGE_DIR}/.tests/docker-compose.yml --profile testing up --force-recreate --remove-orphans -d
 
     source images/${IMAGE_DIR}/.tests/test.config
 
-    GAMEDIG_DISABLED="${GAMEDIG_DISABLED:-false}"
+    QUERY_MODE="${QUERY_MODE:-gamdig}"
+    QUERY_ITERATION_DELAY="${QUERY_ITERATION_DELAY:-5}"
+    QUERY_POST_DELAY="${QUERY_POST_DELAY:-0}"
+    FILE_TEST="${FILE_TEST:-()}"
     GAMEDIG_TYPE="${GAMEDIG_TYPE:-protocol-valve}"
-    GAME_PORT="${GAME_PORT:-27015}"
+    GAMEDIG_PORT="${GAMEDIG_PORT:-27015}"
 
-
-    sleep 10
-
-    x=1
+    x=0
     while [ $x -le 60 ]
     do
-        if [[ "$GAMEDIG_DISABLED" == "true" ]];
-        then
-            echo "Game doesn't support gamedig, skipping tests"
-            sleep 5
-            break
-        fi
-
-        echo "Testing Gameserver. iteration $x"
-
-        GAMENAME=`gamedig --type $GAMEDIG_TYPE $HOST_IP:$GAME_PORT $HOST_IP | jq -r .name`
-        gamedig --type $GAMEDIG_TYPE $HOST_IP:$GAME_PORT $HOST_IP
-
-        if [ "$GAMENAME" = "LinuxGSM" ];
-        then
-            echo "Gameserver is healthy."
-            break
-        else
-            echo "($GAMENAME) != (LinuxGSM)"
-        fi
-
-
-
         x=$(( $x + 1 ))
-        sleep 10
+        echo "Testing Gameserver. iteration $x"
+        if [[ "$x" != "1" ]];
+        then
+            sleep $QUERY_ITERATION_DELAY
+        fi
+
+
+        if [[ "$QUERY_MODE" == "disabled" ]];
+        then
+            echo "Game testing disabled for this game, skipping tests"
+            break
+        fi
+
+        if [[ "$QUERY_MODE" == "gamedig" ]];
+        then
+            GAMENAME=`gamedig --type $GAMEDIG_TYPE $HOST_IP:$GAMEDIG_PORT $HOST_IP | jq -r .name`
+            gamedig --type $GAMEDIG_TYPE $HOST_IP:$GAMEDIG_PORT $HOST_IP
+
+            if [ "$GAMENAME" = "LinuxGSM" ];
+            then
+                echo "Gameserver is healthy."
+                break
+            else
+                echo "($GAMENAME) != (LinuxGSM)"
+            fi
+        fi
+
+        if [[ "$QUERY_MODE" == "file" ]];
+        then
+            echo "Testing that files exist"
+            missing=0
+            for f in "${FILE_TEST[@]}"
+            do
+                if ! dockerExec "linuxgsm" "ls $f"
+                then
+                    missing=$(( $missing + 1 ))
+                    continue
+                fi
+
+            done
+            if [[ "$missing" == "0" ]];
+            then
+                echo "All files found, Test Passed"
+                break
+            fi
+            # TODO: Consider checking monitor now since we expect the server is running and it wouldn't trigger a restart
+        fi
     done
+
+    sleep $QUERY_POST_DELAY
 
     echo "v=========================v"
     $SUDO docker compose -f images/${IMAGE_DIR}/.tests/docker-compose.yml logs --tail 25
@@ -90,9 +121,9 @@ test() {
 
         for f in images/${IMAGE_DIR}/.tests/scripts/docker/*.sh; do
             base_name=$(basename ${f})
-            $SUDO docker compose -f images/${IMAGE_DIR}/.tests/docker-compose.yml cp $f linuxgsm:/tmp/
+            dockerCopyTo $f "linuxgsm" "/tmp/"
 
-            if ! $SUDO docker compose -f images/${IMAGE_DIR}/.tests/docker-compose.yml exec linuxgsm bash /tmp/$base_name
+            if ! dockerExec "linuxgsm" "bash /tmp/$base_name"
             then
                 echo "Test Failed \"$f\""
                 exit 1
@@ -106,9 +137,27 @@ test() {
         exit 1
     fi
 
-    $SUDO docker compose -f images/${IMAGE_DIR}/.tests/docker-compose.yml down
+    $SUDO docker compose -f images/${IMAGE_DIR}/.tests/docker-compose.yml --profile testing down
+}
 
+dockerCopyFrom() {
+    srcService=$1
+    srcPath=$2
+    destPath=$3
+    $SUDO docker compose -f images/${IMAGE_DIR}/.tests/docker-compose.yml cp $srcService:$srcPath $destPath
+}
 
+dockerCopyTo() {
+    srcPath=$1
+    destService=$2
+    destPath=$3
+    $SUDO docker compose -f images/${IMAGE_DIR}/.tests/docker-compose.yml cp $srcPath $destService:$destPath
+}
+
+dockerExec() {
+    srcService=$1
+    command=$2
+    $SUDO docker compose -f images/${IMAGE_DIR}/.tests/docker-compose.yml exec $srcService $command
 }
 
 "$@"
