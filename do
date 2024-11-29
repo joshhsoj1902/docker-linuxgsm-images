@@ -24,7 +24,7 @@ run() {
 test() {
     HOST_IP=`hostname -I | awk '{print $1}'`
     # npm install gamedig -g
-    $SUDO docker compose -f images/${IMAGE_DIR}/.tests/docker-compose.yml --profile testing up -d
+    $SUDO docker compose -f images/${IMAGE_DIR}/.tests/docker-compose.yml --profile testing up --force-recreate --remove-orphans -d
 
     source images/${IMAGE_DIR}/.tests/test.config
 
@@ -72,7 +72,7 @@ test() {
             missing=0
             for f in "${FILE_TEST[@]}"
             do
-                if ! $SUDO docker compose -f images/${IMAGE_DIR}/.tests/docker-compose.yml exec linuxgsm ls $f
+                if ! dockerExec "linuxgsm" "ls $f"
                 then
                     missing=$(( $missing + 1 ))
                     continue
@@ -121,9 +121,9 @@ test() {
 
         for f in images/${IMAGE_DIR}/.tests/scripts/docker/*.sh; do
             base_name=$(basename ${f})
-            $SUDO docker compose -f images/${IMAGE_DIR}/.tests/docker-compose.yml cp $f linuxgsm:/tmp/
+            dockerCopyTo $f "linuxgsm" "/tmp/"
 
-            if ! $SUDO docker compose -f images/${IMAGE_DIR}/.tests/docker-compose.yml exec linuxgsm bash /tmp/$base_name
+            if ! dockerExec "linuxgsm" "bash /tmp/$base_name"
             then
                 echo "Test Failed \"$f\""
                 exit 1
@@ -137,7 +137,7 @@ test() {
         exit 1
     fi
 
-    $SUDO docker compose -f images/${IMAGE_DIR}/.tests/docker-compose.yml down
+    $SUDO docker compose -f images/${IMAGE_DIR}/.tests/docker-compose.yml --profile testing down
 }
 
 dockerCopyFrom() {
@@ -145,6 +145,13 @@ dockerCopyFrom() {
     srcPath=$2
     destPath=$3
     $SUDO docker compose -f images/${IMAGE_DIR}/.tests/docker-compose.yml cp $srcService:$srcPath $destPath
+}
+
+dockerCopyTo() {
+    srcPath=$1
+    destService=$2
+    destPath=$3
+    $SUDO docker compose -f images/${IMAGE_DIR}/.tests/docker-compose.yml cp $srcPath $destService:$destPath
 }
 
 dockerExec() {
