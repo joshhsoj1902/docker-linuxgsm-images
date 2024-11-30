@@ -1,6 +1,6 @@
 FROM hairyhenderson/gomplate:v4.2.0@sha256:20af20cf82a5b8c14572f756af1ab89d25a42da33823b8eddbe058d60398927f AS gomplate
 
-FROM gameservermanagers/gameserver:fctr@sha256:062d332deb7527b74d94da69c042b55833158ee2fd6143b967ac311d73312df2
+FROM gameservermanagers/gameserver:fctr@sha256:698e6af73e18224b18d6f3ce597fcc51ef41518317e65de0fe28a3169101361e
 ARG IMAGE_DIR
 
 # Override entrypoint-user to support hooks
