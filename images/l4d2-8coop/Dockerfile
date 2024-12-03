@@ -1,7 +1,7 @@
 FROM hairyhenderson/gomplate:v4.2.0@sha256:20af20cf82a5b8c14572f756af1ab89d25a42da33823b8eddbe058d60398927f AS gomplate
 
 # https://forums.alliedmods.net/showthread.php?t=39439
-FROM ubuntu@sha256:278628f08d4979fb9af9ead44277dbc9c92c2465922310916ad0c46ec9999295 AS stripper
+FROM ubuntu@sha256:80dd3c3b9c6cecb9f1667e9290b3bc61b78c2678c02cbdae5f0fea92cc6734ab AS stripper
 ADD http://www.bailopan.net/stripper/snapshots/1.2/stripper-1.2.2-git141-linux.tar.gz stripper.tar.gz
 RUN tar -zxvf stripper.tar.gz
 
@@ -43,7 +43,7 @@ ADD https://github.com/fbef0102/L4D1_2-Plugins/releases/download/Multi-Colors/mu
 RUN unzip multicolors.zip
 
 # https://github.com/nosoop/SMExt-SourceScramble
-FROM ubuntu@sha256:278628f08d4979fb9af9ead44277dbc9c92c2465922310916ad0c46ec9999295 AS sourcescramble
+FROM ubuntu@sha256:80dd3c3b9c6cecb9f1667e9290b3bc61b78c2678c02cbdae5f0fea92cc6734ab AS sourcescramble
 # renovate: datasource=github-tags depName=fbef0102/l4dtoolz versioning=semver-coerced
 ENV SOURCESCRAMBLE_VERSION=0.7.1.4
 ADD https://github.com/nosoop/SMExt-SourceScramble/releases/download/$SOURCESCRAMBLE_VERSION/package.tar.gz package.tar.gz
