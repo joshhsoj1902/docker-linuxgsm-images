@@ -127,6 +127,10 @@ jobs:
           shell: /bin/bash
           command: |
             env
+
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
             node -v
             nvm list
             npm -g list
