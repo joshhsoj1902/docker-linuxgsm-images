@@ -43,6 +43,7 @@
     <!-- <property name="UserDataFolder" value="absolute path" /> -->    <!-- Use this to override where the server stores all user data, including RWG generated worlds and saves. Do not forget to uncomment the entry! -->
 
 	<!-- Other technical settings -->
+	<property name="ServerAllowCrossplay"                   value="{{getenv "LGSM_SERVER_ALLOW_CROSSPLAY" "false"}}"/>                         <!-- Enables/Disables crossplay, crossplay servers will only be found in searches and joinable if sanctions are not ignored, and have a default or fewer player slot count  -->
 	<property name="EACEnabled"	value="{{getenv "LGSM_EAC_ENABLED" "true"}}"/>				            <!-- Enables/Disables EasyAntiCheat -->
 	<property name="IgnoreEOSSanctions"   value="false"/>                         <!-- Ignore EOS sanctions when allowing players to join -->
 	<property name="HideCommandExecutionLog"	value="{{getenv "LGSM_HIDE_COMMAND_EXECUTION_LOG" "0"}}"/>				<!-- Hide logging of command execution. 0 = show everything, 1 = hide only from Telnet/ControlPanel, 2 = also hide from remote game clients, 3 = hide everything -->
