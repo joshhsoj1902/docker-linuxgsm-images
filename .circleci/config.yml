@@ -124,6 +124,7 @@ jobs:
       - run: |
           # mkdir -p $CIRCLE_WORKING_DIRECTORY/.npm-global/lib
           # npm config set prefix '$CIRCLE_WORKING_DIRECTORY/.npm-global'
+          nvm list
           npm install gamedig -g
       - run: mkdir -p rendered_serverconfig
       - run:
