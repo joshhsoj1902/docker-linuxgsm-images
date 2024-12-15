@@ -124,6 +124,7 @@ jobs:
       - run: mkdir -p rendered_serverconfig
       - run:
           name: "Start & Test image"
+          shell: /bin/bash
           command: |
             node -v
             nvm list
