@@ -126,14 +126,14 @@ jobs:
           name: "Start & Test image"
           shell: /bin/bash
           command: |
-            env
-
+            # CCI doesn't seem to load the rc files. debugging is slow and this just works.
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
             node -v
             nvm list
             npm -g list
+
             IMAGE_DIR=<< parameters.dir >> ./do test
       - store_artifacts:
           path: rendered_serverconfig
