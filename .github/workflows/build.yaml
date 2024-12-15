@@ -1,0 +1,49 @@
+name: "Build Docker Image"
+on: [push]
+jobs:
+  build-docker:
+    strategy:
+      matrix:
+        target: [
+          factorio-base,
+          # gmod-base,
+          # minecraft-paper-base,
+          # palworld-base,
+          # project-zomboid-base,
+          # satisfactory-base,
+          # sdtd-base,
+          # sdtd-a19,
+          # sdtd-a21,
+          # l4d2-base,
+          # l4d2-8coop,
+        ]
+    runs-on: ubuntu
+    container:
+      image: joshhsoj1902/circleci-build-image:0.0.0-241
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            changed:
+              - '${{ matrix.target }}/**'
+              - '.gitea/**'
+      - name: Build Skipped
+        if: steps.filter.outputs.changed != 'true'
+        run: echo "No Changes, Skipping build"
+      - name: Build Image
+        if: steps.filter.outputs.changed == 'true'
+        run: IMAGE_DIR=${{ matrix.target }} ./do build
+      - name: Test Image
+        if: steps.filter.outputs.changed == 'true'
+        shell: bash
+        run: IMAGE_DIR=${{ matrix.target }} ./do test
+      - name: "Cleanup"
+        if: always()
+        run: docker-compose -f ${{ matrix.target }}/docker-compose.yml -f ${{ matrix.target }}/.tests/docker-compose.yml down
+      - name: Deploy
+        run: cd ${{ matrix.target }} && make publish
+        if: ${{ (github.ref == 'refs/heads/main') && (steps.filter.outputs.changed == 'true') }}
+

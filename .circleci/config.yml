@@ -215,30 +215,30 @@ workflows:
   ###################################
   # linuxgsm game image build steps #
   ###################################
-  build-games:
-    jobs:
-      - build-docker-game:
-          name: build << matrix.dir >>
-          matrix:
-            parameters:
-              dir: *images
-      - test-docker-game:
-          name: test << matrix.dir >>
-          matrix:
-            parameters:
-              dir: *images
-          requires:
-            - build << matrix.dir >>
-      - publish-docker-game-latest:
-          name: publish latest << matrix.dir >>
-          matrix:
-            parameters:
-              dir: *images
-          requires:
-            - test << matrix.dir >>
-          filters:
-            branches:
-              only: main
+  # build-games:
+  #   jobs:
+  #     - build-docker-game:
+  #         name: build << matrix.dir >>
+  #         matrix:
+  #           parameters:
+  #             dir: *images
+  #     - test-docker-game:
+  #         name: test << matrix.dir >>
+  #         matrix:
+  #           parameters:
+  #             dir: *images
+  #         requires:
+  #           - build << matrix.dir >>
+  #     - publish-docker-game-latest:
+  #         name: publish latest << matrix.dir >>
+  #         matrix:
+  #           parameters:
+  #             dir: *images
+  #         requires:
+  #           - test << matrix.dir >>
+  #         filters:
+  #           branches:
+  #             only: main
   tag-game-releases:
     jobs:
       - build-docker-game:
