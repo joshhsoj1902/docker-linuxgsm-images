@@ -121,6 +121,7 @@ jobs:
     executor: docker-game-publisher
     steps:
       - checkout
+      - run: npm install gamedig -g
       - run: mkdir -p rendered_serverconfig
       - run:
           name: "Start & Test image"
