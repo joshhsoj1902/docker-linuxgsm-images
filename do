@@ -36,7 +36,7 @@ test() {
     GAMEDIG_PORT="${GAMEDIG_PORT:-27015}"
 
     GAMEDIG='gamedig'
-    if [[ $EUID != 0 ]] && [[ "$USER" != "circleci" ]]; then
+    if [[ "$USER" == "runner" ]]; then
         GAMEDIG='/home/runner/.nvm/versions/node/v22.12.0/bin/gamedig'
     fi
 
