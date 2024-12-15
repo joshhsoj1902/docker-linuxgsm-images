@@ -130,6 +130,7 @@ jobs:
       - run:
           name: "Start & Test image"
           command: |
+            echo "$USER"
             IMAGE_DIR=<< parameters.dir >> ./do test
       - store_artifacts:
           path: rendered_serverconfig
