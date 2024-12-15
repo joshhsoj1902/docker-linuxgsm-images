@@ -53,7 +53,7 @@ RUN tar -zxvf package.tar.gz
 FROM bitnami/git@sha256:cad8593b904daf66e2d83454440be2052bcb6f19d2ce87d2db5a0b1beef63331 AS discord
 RUN git clone https://github.com/Mbk10201/Discord_loggerv2.git
 
-FROM gameservermanagers/gameserver:l4d2@sha256:bcae5ac60b24b59972f3ed2183af0d10239415580c365043cca728789ba8e78d
+FROM gameservermanagers/gameserver:l4d2@sha256:8900a6952c1f2294b1316a7c3a9a70e33cb2ff93c78537ea1bbedf7deae2bef3
 ARG IMAGE_DIR
 
 # Override entrypoint-user to support hooks
