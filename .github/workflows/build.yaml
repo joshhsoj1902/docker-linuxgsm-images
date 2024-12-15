@@ -34,6 +34,10 @@ jobs:
       - name: Build Skipped
         if: steps.filter.outputs.changed != 'true'
         run: echo "No Changes, Skipping build"
+      - name: debugging
+        run: |
+          HOST_IP=`ip route | grep default | awk '{print $3}'`
+          echo $HOST_IP
       - name: Build Image
         if: steps.filter.outputs.changed == 'true'
         run: IMAGE_DIR=${{ matrix.target }} ./do build
