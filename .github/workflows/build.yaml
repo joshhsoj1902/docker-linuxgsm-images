@@ -29,7 +29,7 @@ jobs:
           filters: |
             changed:
               - '${{ matrix.target }}/**'
-              - '.gitea/**'
+              - '.github/**'
       - name: Build Skipped
         if: steps.filter.outputs.changed != 'true'
         run: echo "No Changes, Skipping build"
