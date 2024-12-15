@@ -126,6 +126,7 @@ jobs:
           name: "Start & Test image"
           shell: /bin/bash
           command: |
+            env
             node -v
             nvm list
             npm -g list
