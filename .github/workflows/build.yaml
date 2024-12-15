@@ -18,8 +18,8 @@ jobs:
           # l4d2-8coop,
         ]
     runs-on: self-hosted
-    container:
-      image: joshhsoj1902/circleci-build-image:0.0.0-241
+    # container:
+    #   image: joshhsoj1902/circleci-build-image:0.0.0-241
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
