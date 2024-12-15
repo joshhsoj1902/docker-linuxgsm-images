@@ -121,16 +121,10 @@ jobs:
     executor: docker-game-publisher
     steps:
       - checkout
-      # - run: |
-      #     # mkdir -p $CIRCLE_WORKING_DIRECTORY/.npm-global/lib
-      #     # npm config set prefix '$CIRCLE_WORKING_DIRECTORY/.npm-global'
-      #     nvm list
-      #     npm install gamedig -g
       - run: mkdir -p rendered_serverconfig
       - run:
           name: "Start & Test image"
           command: |
-            echo "$USER"
             IMAGE_DIR=<< parameters.dir >> ./do test
       - store_artifacts:
           path: rendered_serverconfig

@@ -35,11 +35,6 @@ test() {
     GAMEDIG_TYPE="${GAMEDIG_TYPE:-protocol-valve}"
     GAMEDIG_PORT="${GAMEDIG_PORT:-27015}"
 
-    GAMEDIG='gamedig'
-    if [[ "$USER" == "runner" ]]; then
-        GAMEDIG='/home/runner/.nvm/versions/node/v22.12.0/bin/gamedig'
-    fi
-
     x=0
     while [ $x -le 60 ]
     do
@@ -59,8 +54,8 @@ test() {
 
         if [[ "$QUERY_MODE" == "gamedig" ]];
         then
-            GAMENAME=`$GAMEDIG --type $GAMEDIG_TYPE $HOST_IP:$GAMEDIG_PORT $HOST_IP | jq -r .name`
-            $GAMEDIG --type $GAMEDIG_TYPE $HOST_IP:$GAMEDIG_PORT $HOST_IP
+            GAMENAME=`gamedig --type $GAMEDIG_TYPE $HOST_IP:$GAMEDIG_PORT $HOST_IP | jq -r .name`
+            gamedig --type $GAMEDIG_TYPE $HOST_IP:$GAMEDIG_PORT $HOST_IP
 
             if [ "$GAMENAME" = "LinuxGSM" ];
             then
