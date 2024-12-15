@@ -23,7 +23,7 @@ run() {
 
 test() {
     HOST_IP=`hostname -I | awk '{print $1}'`
-    # npm install gamedig -g
+    $SUDO npm install gamedig -g
     $SUDO docker compose -f images/${IMAGE_DIR}/.tests/docker-compose.yml --profile testing up --force-recreate --remove-orphans -d
 
     source images/${IMAGE_DIR}/.tests/test.config
