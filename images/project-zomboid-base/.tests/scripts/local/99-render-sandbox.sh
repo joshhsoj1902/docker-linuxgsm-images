@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 SUDO=''
-if [[ $EUID != 0 ]] && [[ "$USER" != "circleci" ]]; then
+if [[ $EUID != 0 ]] && [[ "$USER" != "gha" ]]; then
     SUDO='sudo'
 fi
 
