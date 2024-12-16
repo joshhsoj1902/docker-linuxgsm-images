@@ -37,7 +37,7 @@ jobs:
               - 'common/**'
       - name: Build Image
         # Only build on change, or on Main/Tag
-        if: ${{ ((github.ref == 'refs/heads/main') || (startsWith(github.ref, 'refs/tags'))) && (steps.filter.outputs.changed == 'true') }}
+        if: ${{ ((github.ref == 'refs/heads/main') || (startsWith(github.ref, 'refs/tags'))) || (steps.filter.outputs.changed == 'true') }}
         run: IMAGE_DIR=${{ matrix.cfg.path }} ./do build
       - name: Test Image
         # Only retest if there was a change
@@ -53,14 +53,14 @@ jobs:
         run: docker compose -f images/${{ matrix.cfg.path }}/.tests/docker-compose.yml down
 
       - name: Deploy Main
-        if: ${{ (github.ref == 'refs/heads/main') && (steps.filter.outputs.changed == 'true') }}
+        if: ${{ (github.ref == 'refs/heads/main') }}
         run: |
           IMAGE_TAG="0.0.${{ github.run_id }}-${{ matrix.cfg.path }}"
           docker tag $IMAGE_NAME:latest-${{ matrix.cfg.path }} $IMAGE_NAME:$IMAGE_TAG
           docker push $IMAGE_NAME:latest-${{ matrix.cfg.path }}
           docker push $IMAGE_NAME:$IMAGE_TAG
       - name: Deploy Tag
-        if: ${{ (startsWith(github.ref, 'refs/tags')) && (steps.filter.outputs.changed == 'true') }}
+        if: ${{ (startsWith(github.ref, 'refs/tags')) }}
         run: |
           IMAGE_TAG="${{ github.ref_name }}"
           docker tag $IMAGE_NAME:latest-${{ matrix.cfg.path }} $IMAGE_NAME:$IMAGE_TAG
