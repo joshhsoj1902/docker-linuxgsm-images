@@ -52,13 +52,6 @@ jobs:
         if: failure()
         run: docker compose -f images/${{ matrix.cfg.path }}/.tests/docker-compose.yml down
 
-      - name: debugging
-        env:
-          DOCKERHUB_PASS: ${{ secrets.DOCKERHUB_PASS }}
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-        run: |
-          echo "$DOCKERHUB_USERNAME"
-
       - name: Deploy Main
         if: ${{ (github.ref == 'refs/heads/main') }}
         env:
