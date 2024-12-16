@@ -6,7 +6,7 @@ jobs:
       matrix:
         target: [
           factorio-base,
-          # gmod-base,
+          gmod-base,
           # minecraft-paper-base,
           # palworld-base,
           # project-zomboid-base,
