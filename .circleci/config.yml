@@ -102,73 +102,73 @@ jobs:
   ###################################
   # linuxgsm game image build steps #
   ###################################
-  build-docker-game:
-    parameters:
-      dir:
-        type: string
-    executor: docker-game-publisher
-    steps:
-      - checkout
-      - run:
-          name: "Build image"
-          command: |
-            IMAGE_DIR=<< parameters.dir >> ./do build
+  # build-docker-game:
+  #   parameters:
+  #     dir:
+  #       type: string
+  #   executor: docker-game-publisher
+  #   steps:
+  #     - checkout
+  #     - run:
+  #         name: "Build image"
+  #         command: |
+  #           IMAGE_DIR=<< parameters.dir >> ./do build
 
-  test-docker-game:
-    parameters:
-      dir:
-        type: string
-    executor: docker-game-publisher
-    steps:
-      - checkout
-      - run: mkdir -p rendered_serverconfig
-      - run:
-          name: "Start & Test image"
-          shell: /bin/bash
-          command: |
-            # CCI doesn't seem to load the rc files. debugging is slow and this just works.
-            export NVM_DIR="$HOME/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+  # test-docker-game:
+  #   parameters:
+  #     dir:
+  #       type: string
+  #   executor: docker-game-publisher
+  #   steps:
+  #     - checkout
+  #     - run: mkdir -p rendered_serverconfig
+  #     - run:
+  #         name: "Start & Test image"
+  #         shell: /bin/bash
+  #         command: |
+  #           # CCI doesn't seem to load the rc files. debugging is slow and this just works.
+  #           export NVM_DIR="$HOME/.nvm"
+  #           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
-            node -v
-            nvm list
-            npm -g list
+  #           node -v
+  #           nvm list
+  #           npm -g list
 
-            IMAGE_DIR=<< parameters.dir >> ./do test
-      - store_artifacts:
-          path: rendered_serverconfig
-      - run:
-          name: "Cleanup"
-          command: docker compose -f images/<< parameters.dir >>/.tests/docker-compose.yml down
-          when: always
+  #           IMAGE_DIR=<< parameters.dir >> ./do test
+  #     - store_artifacts:
+  #         path: rendered_serverconfig
+  #     - run:
+  #         name: "Cleanup"
+  #         command: docker compose -f images/<< parameters.dir >>/.tests/docker-compose.yml down
+  #         when: always
 
-  publish-docker-game-latest:
-    parameters:
-      dir:
-        type: string
-    executor: docker-game-publisher
-    steps:
-      - run:
-          name: Publish Docker Image to Docker Hub
-          command: |
-            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            IMAGE_TAG="0.0.${CIRCLE_BUILD_NUM}-<< parameters.dir >>"
-            docker tag $IMAGE_NAME:latest-<< parameters.dir >> $IMAGE_NAME:$IMAGE_TAG
-            docker push $IMAGE_NAME:latest-<< parameters.dir >>
-            docker push $IMAGE_NAME:$IMAGE_TAG
-  publish-docker-game-tag:
-    parameters:
-      dir:
-        type: string
-    executor: docker-game-publisher
-    steps:
-      - run:
-          name: Publish Docker Image to Docker Hub
-          command: |
-            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            IMAGE_TAG=${CIRCLE_TAG/v/''}
-            docker tag $IMAGE_NAME:latest-<< parameters.dir >> $IMAGE_NAME:$IMAGE_TAG-<< parameters.dir >>
-            docker push $IMAGE_NAME:$IMAGE_TAG-<< parameters.dir >>
+  # publish-docker-game-latest:
+  #   parameters:
+  #     dir:
+  #       type: string
+  #   executor: docker-game-publisher
+  #   steps:
+  #     - run:
+  #         name: Publish Docker Image to Docker Hub
+  #         command: |
+  #           echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+  #           IMAGE_TAG="0.0.${CIRCLE_BUILD_NUM}-<< parameters.dir >>"
+  #           docker tag $IMAGE_NAME:latest-<< parameters.dir >> $IMAGE_NAME:$IMAGE_TAG
+  #           docker push $IMAGE_NAME:latest-<< parameters.dir >>
+  #           docker push $IMAGE_NAME:$IMAGE_TAG
+  # publish-docker-game-tag:
+  #   parameters:
+  #     dir:
+  #       type: string
+  #   executor: docker-game-publisher
+  #   steps:
+  #     - run:
+  #         name: Publish Docker Image to Docker Hub
+  #         command: |
+  #           echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+  #           IMAGE_TAG=${CIRCLE_TAG/v/''}
+  #           docker tag $IMAGE_NAME:latest-<< parameters.dir >> $IMAGE_NAME:$IMAGE_TAG-<< parameters.dir >>
+  #           docker push $IMAGE_NAME:$IMAGE_TAG-<< parameters.dir >>
   # check-sdtd-config:
   #   executor: docker-cimg
   #   steps:
@@ -215,66 +215,66 @@ workflows:
   ###################################
   # linuxgsm game image build steps #
   ###################################
-  build-games:
-    jobs:
-      - build-docker-game:
-          name: build << matrix.dir >>
-          matrix:
-            parameters:
-              dir: *images
-      - test-docker-game:
-          name: test << matrix.dir >>
-          matrix:
-            parameters:
-              dir: *images
-          requires:
-            - build << matrix.dir >>
-      - publish-docker-game-latest:
-          name: publish latest << matrix.dir >>
-          matrix:
-            parameters:
-              dir: *images
-          requires:
-            - test << matrix.dir >>
-          filters:
-            branches:
-              only: main
-  tag-game-releases:
-    jobs:
-      - build-docker-game:
-          name: build << matrix.dir >>
-          matrix:
-            parameters:
-              dir: *images
-          filters:
-            tags:
-              only: /^v.*/
-            branches:
-              ignore: /.*/
-      - test-docker-game:
-          name: test << matrix.dir >>
-          matrix:
-            parameters:
-              dir: *images
-          requires:
-            - build << matrix.dir >>
-          filters:
-            tags:
-              only: /^v.*/
-            branches:
-              ignore: /.*/
-      - publish-docker-game-tag:
-          name: publish tag << matrix.dir >>
-          matrix:
-            parameters:
-              dir: *images
-          requires:
-            - test << matrix.dir >>
-          filters:
-            tags:
-              only: /^v.*/
-            branches:
-              ignore: /.*/
+  # build-games:
+  #   jobs:
+  #     - build-docker-game:
+  #         name: build << matrix.dir >>
+  #         matrix:
+  #           parameters:
+  #             dir: *images
+  #     - test-docker-game:
+  #         name: test << matrix.dir >>
+  #         matrix:
+  #           parameters:
+  #             dir: *images
+  #         requires:
+  #           - build << matrix.dir >>
+  #     - publish-docker-game-latest:
+  #         name: publish latest << matrix.dir >>
+  #         matrix:
+  #           parameters:
+  #             dir: *images
+  #         requires:
+  #           - test << matrix.dir >>
+  #         filters:
+  #           branches:
+  #             only: main
+  # tag-game-releases:
+  #   jobs:
+  #     - build-docker-game:
+  #         name: build << matrix.dir >>
+  #         matrix:
+  #           parameters:
+  #             dir: *images
+  #         filters:
+  #           tags:
+  #             only: /^v.*/
+  #           branches:
+  #             ignore: /.*/
+  #     - test-docker-game:
+  #         name: test << matrix.dir >>
+  #         matrix:
+  #           parameters:
+  #             dir: *images
+  #         requires:
+  #           - build << matrix.dir >>
+  #         filters:
+  #           tags:
+  #             only: /^v.*/
+  #           branches:
+  #             ignore: /.*/
+  #     - publish-docker-game-tag:
+  #         name: publish tag << matrix.dir >>
+  #         matrix:
+  #           parameters:
+  #             dir: *images
+  #         requires:
+  #           - test << matrix.dir >>
+  #         filters:
+  #           tags:
+  #             only: /^v.*/
+  #           branches:
+  #             ignore: /.*/
   # checks:
   #   jobs:
   #     - check-sdtd-config

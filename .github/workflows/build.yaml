@@ -1,0 +1,64 @@
+name: "Build Docker Image"
+on:
+  - push
+  - release
+jobs:
+  matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v2
+      - id: set-matrix
+        run: |
+          TASKS=$(echo $(cat .github/workflows/images-matrix.json) | sed 's/ //g' )
+          echo "::set-output name=matrix::$TASKS"
+  build-docker:
+    needs: [ matrix ]
+    strategy:
+      matrix:
+        cfg: ${{ fromJson(needs.matrix.outputs.matrix) }}
+    runs-on: self-hosted
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            changed:
+              - '${{ matrix.cfg.path }}/**'
+              - '.github/**'
+              - 'common/**'
+      - name: Build Image
+        # Only build on change, or on Main/Tag
+        if: ${{ ((github.ref == 'refs/heads/main') || (startsWith(github.ref, 'refs/tags'))) && (steps.filter.outputs.changed == 'true') }}
+        run: IMAGE_DIR=${{ matrix.cfg.path }} ./do build
+      - name: Test Image
+        # Only retest if there was a change
+        if: steps.filter.outputs.changed == 'true'
+        shell: bash
+        run: |
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+          IMAGE_DIR=${{ matrix.cfg.path }} ./do test
+      - name: "Cleanup"
+        if: failure()
+        run: docker compose -f images/${{ matrix.cfg.path }}/.tests/docker-compose.yml down
+
+      - name: Deploy Main
+        if: ${{ (github.ref == 'refs/heads/main') && (steps.filter.outputs.changed == 'true') }}
+        run: |
+          IMAGE_TAG="0.0.${{ github.run_id }}-${{ matrix.cfg.path }}"
+          docker tag $IMAGE_NAME:latest-${{ matrix.cfg.path }} $IMAGE_NAME:$IMAGE_TAG
+          docker push $IMAGE_NAME:latest-${{ matrix.cfg.path }}
+          docker push $IMAGE_NAME:$IMAGE_TAG
+      - name: Deploy Tag
+        if: ${{ (startsWith(github.ref, 'refs/tags')) && (steps.filter.outputs.changed == 'true') }}
+        run: |
+          IMAGE_TAG="${{ github.ref_name }}"
+          docker tag $IMAGE_NAME:latest-${{ matrix.cfg.path }} $IMAGE_NAME:$IMAGE_TAG
+          docker push $IMAGE_NAME:$IMAGE_TAG-${{ matrix.cfg.path }}
