@@ -1,0 +1,13 @@
+[
+    { "path": "factorio-base" },
+    { "path": "gmod-base" },
+    { "path": "minecraft-paper-base" },
+    { "path": "palworld-base" },
+    { "path": "project-zomboid-base" },
+    { "path": "satisfactory-base" },
+    { "path": "sdtd-base" },
+    { "path": "sdtd-a19" },
+    { "path": "sdtd-a21" },
+    // { "path": "l4d2-base" },
+    // { "path": "l4d2-8coop" },
+]

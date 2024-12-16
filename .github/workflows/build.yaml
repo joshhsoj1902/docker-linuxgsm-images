@@ -3,22 +3,35 @@ on:
   - push
   - release
 jobs:
+  matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v2
+      - id: set-matrix
+        run: |
+          TASKS=$(echo $(cat .github/workflows/images-matrix.json) | sed 's/ //g' )
+          echo "::set-output name=matrix::$TASKS"
   build-docker:
+    needs: [ matrix ]
     strategy:
       matrix:
-        target: [
-          factorio-base,
-          gmod-base,
-          minecraft-paper-base,
-          palworld-base,
-          project-zomboid-base,
-          satisfactory-base,
-          sdtd-base,
-          sdtd-a19,
-          sdtd-a21,
-          # l4d2-base,
-          # l4d2-8coop,
-        ]
+        cfg: ${{ fromJson(needs.matrix.outputs.matrix) }}
+      # matrix:
+      #   target: [
+      #     factorio-base,
+      #     gmod-base,
+      #     minecraft-paper-base,
+      #     palworld-base,
+      #     project-zomboid-base,
+      #     satisfactory-base,
+      #     sdtd-base,
+      #     sdtd-a19,
+      #     sdtd-a21,
+      #     # l4d2-base,
+      #     # l4d2-8coop,
+      #   ]
     runs-on: self-hosted
 
     steps:
@@ -30,14 +43,14 @@ jobs:
         with:
           filters: |
             changed:
-              - '${{ matrix.target }}/**'
+              - '${{ matrix.path }}/**'
               - '.github/**'
       - name: Build Skipped
         if: steps.filter.outputs.changed != 'true'
         run: echo "No Changes, Skipping build"
       - name: Build Image
         if: steps.filter.outputs.changed == 'true'
-        run: IMAGE_DIR=${{ matrix.target }} ./do build
+        run: IMAGE_DIR=${{ matrix.path }} ./do build
       - name: Test Image
         if: steps.filter.outputs.changed == 'true'
         shell: bash
@@ -45,21 +58,21 @@ jobs:
           export NVM_DIR="$HOME/.nvm"
           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
-          IMAGE_DIR=${{ matrix.target }} ./do test
+          IMAGE_DIR=${{ matrix.path }} ./do test
       - name: "Cleanup"
         if: failure()
-        run: docker compose -f images/${{ matrix.target }}/.tests/docker-compose.yml down
+        run: docker compose -f images/${{ matrix.path }}/.tests/docker-compose.yml down
 
       - name: Deploy Main
         if: ${{ (github.ref == 'refs/heads/main') && (steps.filter.outputs.changed == 'true') }}
         run: |
-          IMAGE_TAG="0.0.${{ github.run_id }}-${{ matrix.target }}"
-          docker tag $IMAGE_NAME:latest-${{ matrix.target }} $IMAGE_NAME:$IMAGE_TAG
-          docker push $IMAGE_NAME:latest-${{ matrix.target }}
+          IMAGE_TAG="0.0.${{ github.run_id }}-${{ matrix.path }}"
+          docker tag $IMAGE_NAME:latest-${{ matrix.path }} $IMAGE_NAME:$IMAGE_TAG
+          docker push $IMAGE_NAME:latest-${{ matrix.path }}
           docker push $IMAGE_NAME:$IMAGE_TAG
       - name: Deploy Tag
         if: ${{ (startsWith(github.ref, 'refs/tags')) && (steps.filter.outputs.changed == 'true') }}
         run: |
           IMAGE_TAG="${{ github.ref_name }}"
-          docker tag $IMAGE_NAME:latest-${{ matrix.target }} $IMAGE_NAME:$IMAGE_TAG
-          docker push $IMAGE_NAME:$IMAGE_TAG-${{ matrix.target }}
+          docker tag $IMAGE_NAME:latest-${{ matrix.path }} $IMAGE_NAME:$IMAGE_TAG
+          docker push $IMAGE_NAME:$IMAGE_TAG-${{ matrix.path }}
