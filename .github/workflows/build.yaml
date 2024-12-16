@@ -43,14 +43,14 @@ jobs:
         with:
           filters: |
             changed:
-              - '${{ matrix.path }}/**'
+              - '${{ matrix.cfg.path }}/**'
               - '.github/**'
       - name: Build Skipped
         if: steps.filter.outputs.changed != 'true'
         run: echo "No Changes, Skipping build"
       - name: Build Image
         if: steps.filter.outputs.changed == 'true'
-        run: IMAGE_DIR=${{ matrix.path }} ./do build
+        run: IMAGE_DIR=${{ matrix.cfg.path }} ./do build
       - name: Test Image
         if: steps.filter.outputs.changed == 'true'
         shell: bash
@@ -58,21 +58,21 @@ jobs:
           export NVM_DIR="$HOME/.nvm"
           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
-          IMAGE_DIR=${{ matrix.path }} ./do test
+          IMAGE_DIR=${{ matrix.cfg.path }} ./do test
       - name: "Cleanup"
         if: failure()
-        run: docker compose -f images/${{ matrix.path }}/.tests/docker-compose.yml down
+        run: docker compose -f images/${{ matrix.cfg.path }}/.tests/docker-compose.yml down
 
       - name: Deploy Main
         if: ${{ (github.ref == 'refs/heads/main') && (steps.filter.outputs.changed == 'true') }}
         run: |
-          IMAGE_TAG="0.0.${{ github.run_id }}-${{ matrix.path }}"
-          docker tag $IMAGE_NAME:latest-${{ matrix.path }} $IMAGE_NAME:$IMAGE_TAG
-          docker push $IMAGE_NAME:latest-${{ matrix.path }}
+          IMAGE_TAG="0.0.${{ github.run_id }}-${{ matrix.cfg.path }}"
+          docker tag $IMAGE_NAME:latest-${{ matrix.cfg.path }} $IMAGE_NAME:$IMAGE_TAG
+          docker push $IMAGE_NAME:latest-${{ matrix.cfg.path }}
           docker push $IMAGE_NAME:$IMAGE_TAG
       - name: Deploy Tag
         if: ${{ (startsWith(github.ref, 'refs/tags')) && (steps.filter.outputs.changed == 'true') }}
         run: |
           IMAGE_TAG="${{ github.ref_name }}"
-          docker tag $IMAGE_NAME:latest-${{ matrix.path }} $IMAGE_NAME:$IMAGE_TAG
-          docker push $IMAGE_NAME:$IMAGE_TAG-${{ matrix.path }}
+          docker tag $IMAGE_NAME:latest-${{ matrix.cfg.path }} $IMAGE_NAME:$IMAGE_TAG
+          docker push $IMAGE_NAME:$IMAGE_TAG-${{ matrix.cfg.path }}
