@@ -19,6 +19,9 @@ jobs:
       matrix:
         cfg: ${{ fromJson(needs.matrix.outputs.matrix) }}
     runs-on: self-hosted
+    env:
+      IMAGE_NAME: joshhsoj1902/docker-linuxgsm-images
+
 
     steps:
       - name: Check out repository code
