@@ -46,8 +46,8 @@ jobs:
         shell: bash
         run: IMAGE_DIR=${{ matrix.target }} ./do test
       - name: "Cleanup"
-        if: always()
-        run: docker-compose -f images/${{ matrix.target }}/docker-compose.yml -f images/${{ matrix.target }}/.tests/docker-compose.yml down
+        if: fail()
+        run: docker compose -f images/${{ matrix.target }}/.tests/docker-compose.yml down
       - name: Deploy
         run: cd ${{ matrix.target }} && make publish
         if: ${{ (github.ref == 'refs/heads/main') && (steps.filter.outputs.changed == 'true') }}
