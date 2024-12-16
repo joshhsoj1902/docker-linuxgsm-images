@@ -55,7 +55,7 @@ jobs:
 
       - name: debugging
         run: |
-          echo "$DOCKERHUB_USERNAME"
+          echo "${{env.DOCKERHUB_USERNAME}}"
 
       - name: Deploy Main
         if: ${{ (github.ref == 'refs/heads/main') }}
