@@ -34,17 +34,17 @@ jobs:
       - name: Build Skipped
         if: steps.filter.outputs.changed != 'true'
         run: echo "No Changes, Skipping build"
-      # - name: debugging
-      #   run: |
-      #     HOST_IP=`ip route | grep default | awk '{print $3}'`
-      #     echo $HOST_IP
       - name: Build Image
         if: steps.filter.outputs.changed == 'true'
         run: IMAGE_DIR=${{ matrix.target }} ./do build
       - name: Test Image
         if: steps.filter.outputs.changed == 'true'
         shell: bash
-        run: IMAGE_DIR=${{ matrix.target }} ./do test
+        run: |
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+          IMAGE_DIR=${{ matrix.target }} ./do test
       - name: "Cleanup"
         if: failure()
         run: docker compose -f images/${{ matrix.target }}/.tests/docker-compose.yml down
