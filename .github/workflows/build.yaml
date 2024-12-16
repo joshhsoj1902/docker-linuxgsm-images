@@ -18,20 +18,6 @@ jobs:
     strategy:
       matrix:
         cfg: ${{ fromJson(needs.matrix.outputs.matrix) }}
-      # matrix:
-      #   target: [
-      #     factorio-base,
-      #     gmod-base,
-      #     minecraft-paper-base,
-      #     palworld-base,
-      #     project-zomboid-base,
-      #     satisfactory-base,
-      #     sdtd-base,
-      #     sdtd-a19,
-      #     sdtd-a21,
-      #     # l4d2-base,
-      #     # l4d2-8coop,
-      #   ]
     runs-on: self-hosted
 
     steps:
@@ -45,13 +31,13 @@ jobs:
             changed:
               - '${{ matrix.cfg.path }}/**'
               - '.github/**'
-      - name: Build Skipped
-        if: steps.filter.outputs.changed != 'true'
-        run: echo "No Changes, Skipping build"
+              - 'common/**'
       - name: Build Image
-        if: steps.filter.outputs.changed == 'true'
+        # Only build on change, or on Main/Tag
+        if: ${{ ((github.ref == 'refs/heads/main') || (startsWith(github.ref, 'refs/tags'))) && (steps.filter.outputs.changed == 'true') }}
         run: IMAGE_DIR=${{ matrix.cfg.path }} ./do build
       - name: Test Image
+        # Only retest if there was a change
         if: steps.filter.outputs.changed == 'true'
         shell: bash
         run: |
