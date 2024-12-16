@@ -1,7 +1,7 @@
 name: "Build Docker Image"
 on:
   - push
-  - release
+  # - release
 jobs:
   matrix:
     runs-on: ubuntu-latest
@@ -71,5 +71,5 @@ jobs:
         run: |
           echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
           IMAGE_TAG="${{ github.ref_name }}"
-          docker tag $IMAGE_NAME:latest-${{ matrix.cfg.path }} $IMAGE_NAME:$IMAGE_TAG
+          docker tag $IMAGE_NAME:latest-${{ matrix.cfg.path }} $IMAGE_NAME:$IMAGE_TAG-${{ matrix.cfg.path }}
           docker push $IMAGE_NAME:$IMAGE_TAG-${{ matrix.cfg.path }}
