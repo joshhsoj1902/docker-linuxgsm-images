@@ -1,7 +1,6 @@
 name: "Build Docker Image"
 on:
   - push
-  # - release
 jobs:
   matrix:
     runs-on: ubuntu-latest
