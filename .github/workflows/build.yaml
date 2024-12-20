@@ -1,7 +1,6 @@
 name: "Build Docker Image"
 on:
   - push
-  # - release
 jobs:
   matrix:
     runs-on: ubuntu-latest
@@ -10,14 +9,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - id: set-matrix
-        run: |
-          TASKS=$(echo $(cat .github/workflows/images-matrix.json) | sed 's/ //g' )
-          echo "::set-output name=matrix::$TASKS"
+        run: echo "matrix=$(cd images && ls -d * | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')" >> ${GITHUB_OUTPUT}
   build-docker:
     needs: [ matrix ]
     strategy:
       matrix:
-        cfg: ${{ fromJson(needs.matrix.outputs.matrix) }}
+        path: ${{ fromJson(needs.matrix.outputs.matrix) }}
     runs-on: self-hosted
     env:
       IMAGE_NAME: joshhsoj1902/docker-linuxgsm-images
@@ -32,14 +29,14 @@ jobs:
         with:
           filters: |
             changed:
-              - 'images/${{ matrix.cfg.path }}/**'
+              - 'images/${{ matrix.path }}/**'
               - '.github/**'
               - 'common/**'
               - 'do'
       - name: Build Image
         # Only build on change, or on Main/Tag
         if: ${{ ((github.ref == 'refs/heads/main') || (startsWith(github.ref, 'refs/tags'))) || (steps.filter.outputs.changed == 'true') }}
-        run: IMAGE_DIR=${{ matrix.cfg.path }} ./do build
+        run: IMAGE_DIR=${{ matrix.path }} ./do build
       - name: Test Image
         # Only retest if there was a change
         if: steps.filter.outputs.changed == 'true'
@@ -48,10 +45,10 @@ jobs:
           export NVM_DIR="$HOME/.nvm"
           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
-          IMAGE_DIR=${{ matrix.cfg.path }} ./do test
+          IMAGE_DIR=${{ matrix.path }} ./do test
       - name: "Cleanup"
         if: failure()
-        run: docker compose -f images/${{ matrix.cfg.path }}/.tests/docker-compose.yml down
+        run: docker compose -f images/${{ matrix.path }}/.tests/docker-compose.yml down
 
       - name: Deploy Main
         if: ${{ (github.ref == 'refs/heads/main') }}
@@ -60,9 +57,9 @@ jobs:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
         run: |
           echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-          IMAGE_TAG="0.0.${{ github.run_id }}-${{ matrix.cfg.path }}"
-          docker tag $IMAGE_NAME:latest-${{ matrix.cfg.path }} $IMAGE_NAME:$IMAGE_TAG
-          docker push $IMAGE_NAME:latest-${{ matrix.cfg.path }}
+          IMAGE_TAG="0.0.${{ github.run_id }}-${{ matrix.path }}"
+          docker tag $IMAGE_NAME:latest-${{ matrix.path }} $IMAGE_NAME:$IMAGE_TAG
+          docker push $IMAGE_NAME:latest-${{ matrix.path }}
           docker push $IMAGE_NAME:$IMAGE_TAG
       - name: Deploy Tag
         if: ${{ (startsWith(github.ref, 'refs/tags')) }}
@@ -72,5 +69,5 @@ jobs:
         run: |
           echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
           IMAGE_TAG="${{ github.ref_name }}"
-          docker tag $IMAGE_NAME:latest-${{ matrix.cfg.path }} $IMAGE_NAME:$IMAGE_TAG-${{ matrix.cfg.path }}
-          docker push $IMAGE_NAME:$IMAGE_TAG-${{ matrix.cfg.path }}
+          docker tag $IMAGE_NAME:latest-${{ matrix.path }} $IMAGE_NAME:$IMAGE_TAG-${{ matrix.path }}
+          docker push $IMAGE_NAME:$IMAGE_TAG-${{ matrix.path }}
