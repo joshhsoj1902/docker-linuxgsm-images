@@ -6,7 +6,7 @@ fi
 echo "Validating gomplate produces default config"
 
 echo "sleeping for 60 seconds to allow testing server to properly start"
-sleep 60
+sleep 120
 
 ./do dockerCopyFrom testing /data/serverfiles/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini /tmp/vanilla-palworld-worldsettings.ini
 ./do dockerCopyFrom linuxgsm /data/serverfiles/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini /tmp/gomplate-palworld-worldsettings.cfg
