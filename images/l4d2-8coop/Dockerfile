@@ -1,4 +1,4 @@
-FROM hairyhenderson/gomplate:v4.3.0@sha256:5e24d79d00b99d22ac248473ac09dc3a06f41024ca78d6905650057f296206cb AS gomplate
+FROM hairyhenderson/gomplate:v4.3.3@sha256:55db623a1e3d620501fbf3ff01753cfde101d9b49fa5ff0132b4a8d0c246c16c AS gomplate
 
 # https://forums.alliedmods.net/showthread.php?t=39439
 FROM ubuntu@sha256:80dd3c3b9c6cecb9f1667e9290b3bc61b78c2678c02cbdae5f0fea92cc6734ab AS stripper
