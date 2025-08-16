@@ -18,23 +18,23 @@ ARG IMAGE_DIR
 ADD images/$IMAGE_DIR/l4dtools /
 
 # https://github.com/SilvDev/Left4DHooks
-FROM bitnami/git@sha256:cad8593b904daf66e2d83454440be2052bcb6f19d2ce87d2db5a0b1beef63331 AS left4dhooks
+FROM bitnami/git@sha256:d0f72b598862d1fef731d09fca2d429d8bf6ed71bacc8713e4c33caa5f4e2087 AS left4dhooks
 RUN git clone https://github.com/SilvDev/Left4DHooks.git
 
 # https://github.com/fbef0102/L4D1_2-Plugins/tree/master
-FROM bitnami/git@sha256:cad8593b904daf66e2d83454440be2052bcb6f19d2ce87d2db5a0b1beef63331 AS l4dplugins
+FROM bitnami/git@sha256:d0f72b598862d1fef731d09fca2d429d8bf6ed71bacc8713e4c33caa5f4e2087 AS l4dplugins
 RUN git clone https://github.com/fbef0102/L4D1_2-Plugins.git
 
 # https://github.com/fbef0102/L4D2-Plugins/tree/master
-FROM bitnami/git@sha256:cad8593b904daf66e2d83454440be2052bcb6f19d2ce87d2db5a0b1beef63331 AS l4d2plugins
+FROM bitnami/git@sha256:d0f72b598862d1fef731d09fca2d429d8bf6ed71bacc8713e4c33caa5f4e2087 AS l4d2plugins
 RUN git clone https://github.com/fbef0102/L4D2-Plugins.git
 
 # https://github.com/LuxLuma/Left-4-fix
-FROM bitnami/git@sha256:cad8593b904daf66e2d83454440be2052bcb6f19d2ce87d2db5a0b1beef63331 AS left4fix
+FROM bitnami/git@sha256:d0f72b598862d1fef731d09fca2d429d8bf6ed71bacc8713e4c33caa5f4e2087 AS left4fix
 RUN git clone https://github.com/LuxLuma/Left-4-fix.git
 
 # https://github.com/Target5150/MoYu_Server_Stupid_Plugins
-FROM bitnami/git@sha256:cad8593b904daf66e2d83454440be2052bcb6f19d2ce87d2db5a0b1beef63331 AS moyo
+FROM bitnami/git@sha256:d0f72b598862d1fef731d09fca2d429d8bf6ed71bacc8713e4c33caa5f4e2087 AS moyo
 RUN git clone https://github.com/Target5150/MoYu_Server_Stupid_Plugins.git
 
 # https://github.com/fbef0102/L4D1_2-Plugins/releases/tag/Multi-Colors
@@ -50,7 +50,7 @@ ADD https://github.com/nosoop/SMExt-SourceScramble/releases/download/$SOURCESCRA
 RUN tar -zxvf package.tar.gz
 
 # Discord logger
-FROM bitnami/git@sha256:cad8593b904daf66e2d83454440be2052bcb6f19d2ce87d2db5a0b1beef63331 AS discord
+FROM bitnami/git@sha256:d0f72b598862d1fef731d09fca2d429d8bf6ed71bacc8713e4c33caa5f4e2087 AS discord
 RUN git clone https://github.com/Mbk10201/Discord_loggerv2.git
 
 FROM gameservermanagers/gameserver:l4d2@sha256:c0879f0c343eb0e75215e8f0bf0225aba23df31ffaddd7b4affc29e9653f27ca
