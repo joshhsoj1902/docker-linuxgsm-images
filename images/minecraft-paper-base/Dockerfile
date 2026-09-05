@@ -1,6 +1,6 @@
 FROM hairyhenderson/gomplate:v4.3.0@sha256:5e24d79d00b99d22ac248473ac09dc3a06f41024ca78d6905650057f296206cb AS gomplate
 
-FROM gameservermanagers/gameserver:pmc@sha256:31a6976de4637a20bb0156a071139c3d595c6686a167f0f7d0c685419a67b89a
+FROM gameservermanagers/gameserver:pmc@sha256:9023a241892854b08a2b07609d12e51a4a40d7ad3c2e6135ab6f5c79d8acd30c
 ARG IMAGE_DIR
 
 # Upgrade java version (remove this if the base image is updated)
