@@ -1,3 +1,4 @@
+# Retired: CI does not build this image. See the README.
 FROM hairyhenderson/gomplate:v4.3.0@sha256:5e24d79d00b99d22ac248473ac09dc3a06f41024ca78d6905650057f296206cb AS gomplate
 
 FROM gameservermanagers/gameserver:pz@sha256:db3c0c2580f8afeb5bd5269d7630837812c41e6a06de3631a0e286dd59b600a6

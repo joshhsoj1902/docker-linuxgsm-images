@@ -1,0 +1,4 @@
+# Image directories that CI skips. Replacements are listed in the README.
+minecraft-paper-base
+palworld-base
+project-zomboid-base

@@ -11,7 +11,10 @@
     ".tests/docker-compose.yml",
     "examples/*/docker-compose.*",
     "scripts/**/*Dockerfile",
-    "scripts/**/docker-compose.*"
+    "scripts/**/docker-compose.*",
+    "images/minecraft-paper-base/**",
+    "images/palworld-base/**",
+    "images/project-zomboid-base/**"
   ],
 
   "packageRules": [
