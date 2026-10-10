@@ -30,9 +30,11 @@ RUN git clone --depth 1 https://github.com/fbef0102/L4D1_2-Plugins.git
 FROM bitnami/git@sha256:cad8593b904daf66e2d83454440be2052bcb6f19d2ce87d2db5a0b1beef63331 AS left4fix
 RUN git clone https://github.com/LuxLuma/Left-4-fix.git
 
-# https://github.com/Target5150/MoYu_Server_Stupid_Plugins
-FROM bitnami/git@sha256:cad8593b904daf66e2d83454440be2052bcb6f19d2ce87d2db5a0b1beef63331 AS moyo
-RUN git clone https://github.com/Target5150/MoYu_Server_Stupid_Plugins.git
+# The git tree no longer commits the compiled plugin. Releases publish it.
+# https://github.com/Target5150/MoYu_Server_Stupid_Plugins/releases/tag/20261002055903
+FROM kubeless/unzip:latest@sha256:e867f9b366ffb1a25f14baf83438db426ced4f7add56137b7300d32507229b5a AS moyo
+ADD https://github.com/Target5150/MoYu_Server_Stupid_Plugins/releases/download/20261002055903/MoYu-Plugins-1.12.zip moyu.zip
+RUN unzip moyu.zip
 
 # https://github.com/fbef0102/L4D1_2-Plugins/releases/tag/Multi-Colors
 FROM kubeless/unzip:latest@sha256:e867f9b366ffb1a25f14baf83438db426ced4f7add56137b7300d32507229b5a AS multicolors
@@ -83,8 +85,8 @@ COPY --from=left4fix ["/Left-4-fix/left 4 fix/survivors/survivor_afk_fix", "/lay
 COPY --from=left4fix ["/Left-4-fix/left 4 fix/charger/Charger_Collision_patch", "/layers/l4dtoolz/serverfiles/left4dead2/addons/sourcemod"]
 COPY --from=left4fix ["/Left-4-fix/left 4 fix/witch/witch_target_patch", "/layers/l4dtoolz/serverfiles/left4dead2/addons/sourcemod"]
 
-COPY --from=moyo ["/MoYu_Server_Stupid_Plugins/The Last Stand/l4d2_fix_changelevel/l4d2_fix_changelevel.smx", "/layers/l4dtoolz/serverfiles/left4dead2/addons/sourcemod/plugins"]
-COPY --from=moyo ["/MoYu_Server_Stupid_Plugins/The Last Stand/l4d2_fix_changelevel/l4d2_fix_changelevel.txt", "/layers/l4dtoolz/serverfiles/left4dead2/addons/sourcemod/gamedata"]
+COPY --from=moyo ["/MoYu-Plugins-1.12/The Last Stand/l4d2_fix_changelevel/plugins/l4d2_fix_changelevel.smx", "/layers/l4dtoolz/serverfiles/left4dead2/addons/sourcemod/plugins"]
+COPY --from=moyo ["/MoYu-Plugins-1.12/The Last Stand/l4d2_fix_changelevel/gamedata/l4d2_fix_changelevel.txt", "/layers/l4dtoolz/serverfiles/left4dead2/addons/sourcemod/gamedata"]
 
 
 # COPY --from=unrar /addons /layers/8coop/serverfiles/left4dead2/addons
