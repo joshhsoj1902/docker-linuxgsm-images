@@ -1,6 +1,6 @@
 FROM hairyhenderson/gomplate:v4.3.0@sha256:5e24d79d00b99d22ac248473ac09dc3a06f41024ca78d6905650057f296206cb AS gomplate
 
-FROM gameservermanagers/gameserver:l4d2@sha256:c0879f0c343eb0e75215e8f0bf0225aba23df31ffaddd7b4affc29e9653f27ca
+FROM gameservermanagers/gameserver:l4d2@sha256:241ab5d5d1536453ae000bcd00997f2dfe18fccc7d6bd5e688134d6ba8627519
 ARG IMAGE_DIR
 
 # Override entrypoint-user to support hooks
@@ -18,6 +18,10 @@ RUN apt-get update && apt-get install -y \
 # # Setup ulib
 # ADD scripts/scripts/mod-install.sh /app/hooks/post-install/10-mod-install.sh
 # ENV LGSM_HELPER_MODS=ulib,ulx
+
+# Anonymous app_update of 222860 fails with "Invalid platform" until the
+# Windows depot has been fetched once. See scripts/scripts/l4d2-anonymous-install.sh.
+ADD scripts/scripts/l4d2-anonymous-install.sh /app/hooks/pre-install/40-l4d2-anonymous-install.sh
 
 # Setup Layers
 ADD common/common.cfg.gomplate /layers/001-base/config-lgsm/l4d2server/
