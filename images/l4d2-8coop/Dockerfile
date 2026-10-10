@@ -22,12 +22,9 @@ FROM bitnami/git@sha256:cad8593b904daf66e2d83454440be2052bcb6f19d2ce87d2db5a0b1b
 RUN git clone https://github.com/SilvDev/Left4DHooks.git
 
 # https://github.com/fbef0102/L4D1_2-Plugins/tree/master
+# l4d_both_fixUpgradePack used to live in the deleted L4D2-Plugins repo.
 FROM bitnami/git@sha256:cad8593b904daf66e2d83454440be2052bcb6f19d2ce87d2db5a0b1beef63331 AS l4dplugins
-RUN git clone https://github.com/fbef0102/L4D1_2-Plugins.git
-
-# https://github.com/fbef0102/L4D2-Plugins/tree/master
-FROM bitnami/git@sha256:cad8593b904daf66e2d83454440be2052bcb6f19d2ce87d2db5a0b1beef63331 AS l4d2plugins
-RUN git clone https://github.com/fbef0102/L4D2-Plugins.git
+RUN git clone --depth 1 https://github.com/fbef0102/L4D1_2-Plugins.git
 
 # https://github.com/LuxLuma/Left-4-fix
 FROM bitnami/git@sha256:cad8593b904daf66e2d83454440be2052bcb6f19d2ce87d2db5a0b1beef63331 AS left4fix
@@ -76,7 +73,8 @@ COPY --from=sourcescramble addons /layers/multicolors/serverfiles/left4dead2/add
 COPY --from=l4dplugins /L4D1_2-Plugins/l4dmultislots /layers/l4dtoolz/serverfiles/left4dead2/addons/sourcemod
 COPY --from=l4dplugins /L4D1_2-Plugins/l4dafkfix_deadbot /layers/l4dtoolz/serverfiles/left4dead2/addons/sourcemod
 
-COPY --from=l4d2plugins /L4D2-Plugins/lfd_both_fixUpgradePack /layers/l4dtoolz/serverfiles/left4dead2/addons/sourcemod
+# L4D2-Plugins was removed. The upgrade-pack fix now lives in L4D1_2-Plugins.
+COPY --from=l4dplugins /L4D1_2-Plugins/l4d_both_fixUpgradePack /layers/l4dtoolz/serverfiles/left4dead2/addons/sourcemod
 
 COPY --from=discord /Discord_loggerv2/ /layers/discordlogger/serverfiles/left4dead2/addons/sourcemod
 
