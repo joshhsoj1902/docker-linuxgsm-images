@@ -22,20 +22,19 @@ FROM bitnami/git@sha256:cad8593b904daf66e2d83454440be2052bcb6f19d2ce87d2db5a0b1b
 RUN git clone https://github.com/SilvDev/Left4DHooks.git
 
 # https://github.com/fbef0102/L4D1_2-Plugins/tree/master
+# l4d_both_fixUpgradePack used to live in the deleted L4D2-Plugins repo.
 FROM bitnami/git@sha256:cad8593b904daf66e2d83454440be2052bcb6f19d2ce87d2db5a0b1beef63331 AS l4dplugins
-RUN git clone https://github.com/fbef0102/L4D1_2-Plugins.git
-
-# https://github.com/fbef0102/L4D2-Plugins/tree/master
-FROM bitnami/git@sha256:cad8593b904daf66e2d83454440be2052bcb6f19d2ce87d2db5a0b1beef63331 AS l4d2plugins
-RUN git clone https://github.com/fbef0102/L4D2-Plugins.git
+RUN git clone --depth 1 https://github.com/fbef0102/L4D1_2-Plugins.git
 
 # https://github.com/LuxLuma/Left-4-fix
 FROM bitnami/git@sha256:cad8593b904daf66e2d83454440be2052bcb6f19d2ce87d2db5a0b1beef63331 AS left4fix
 RUN git clone https://github.com/LuxLuma/Left-4-fix.git
 
-# https://github.com/Target5150/MoYu_Server_Stupid_Plugins
-FROM bitnami/git@sha256:cad8593b904daf66e2d83454440be2052bcb6f19d2ce87d2db5a0b1beef63331 AS moyo
-RUN git clone https://github.com/Target5150/MoYu_Server_Stupid_Plugins.git
+# The git tree no longer commits the compiled plugin. Releases publish it.
+# https://github.com/Target5150/MoYu_Server_Stupid_Plugins/releases/tag/20261002055903
+FROM kubeless/unzip:latest@sha256:e867f9b366ffb1a25f14baf83438db426ced4f7add56137b7300d32507229b5a AS moyo
+ADD https://github.com/Target5150/MoYu_Server_Stupid_Plugins/releases/download/20261002055903/MoYu-Plugins-1.12.zip moyu.zip
+RUN unzip moyu.zip
 
 # https://github.com/fbef0102/L4D1_2-Plugins/releases/tag/Multi-Colors
 FROM kubeless/unzip:latest@sha256:e867f9b366ffb1a25f14baf83438db426ced4f7add56137b7300d32507229b5a AS multicolors
@@ -53,7 +52,7 @@ RUN tar -zxvf package.tar.gz
 FROM bitnami/git@sha256:cad8593b904daf66e2d83454440be2052bcb6f19d2ce87d2db5a0b1beef63331 AS discord
 RUN git clone https://github.com/Mbk10201/Discord_loggerv2.git
 
-FROM gameservermanagers/gameserver:l4d2@sha256:c0879f0c343eb0e75215e8f0bf0225aba23df31ffaddd7b4affc29e9653f27ca
+FROM gameservermanagers/gameserver:l4d2@sha256:241ab5d5d1536453ae000bcd00997f2dfe18fccc7d6bd5e688134d6ba8627519
 ARG IMAGE_DIR
 
 # Override entrypoint-user to support hooks
@@ -76,7 +75,8 @@ COPY --from=sourcescramble addons /layers/multicolors/serverfiles/left4dead2/add
 COPY --from=l4dplugins /L4D1_2-Plugins/l4dmultislots /layers/l4dtoolz/serverfiles/left4dead2/addons/sourcemod
 COPY --from=l4dplugins /L4D1_2-Plugins/l4dafkfix_deadbot /layers/l4dtoolz/serverfiles/left4dead2/addons/sourcemod
 
-COPY --from=l4d2plugins /L4D2-Plugins/lfd_both_fixUpgradePack /layers/l4dtoolz/serverfiles/left4dead2/addons/sourcemod
+# L4D2-Plugins was removed. The upgrade-pack fix now lives in L4D1_2-Plugins.
+COPY --from=l4dplugins /L4D1_2-Plugins/l4d_both_fixUpgradePack /layers/l4dtoolz/serverfiles/left4dead2/addons/sourcemod
 
 COPY --from=discord /Discord_loggerv2/ /layers/discordlogger/serverfiles/left4dead2/addons/sourcemod
 
@@ -85,8 +85,8 @@ COPY --from=left4fix ["/Left-4-fix/left 4 fix/survivors/survivor_afk_fix", "/lay
 COPY --from=left4fix ["/Left-4-fix/left 4 fix/charger/Charger_Collision_patch", "/layers/l4dtoolz/serverfiles/left4dead2/addons/sourcemod"]
 COPY --from=left4fix ["/Left-4-fix/left 4 fix/witch/witch_target_patch", "/layers/l4dtoolz/serverfiles/left4dead2/addons/sourcemod"]
 
-COPY --from=moyo ["/MoYu_Server_Stupid_Plugins/The Last Stand/l4d2_fix_changelevel/l4d2_fix_changelevel.smx", "/layers/l4dtoolz/serverfiles/left4dead2/addons/sourcemod/plugins"]
-COPY --from=moyo ["/MoYu_Server_Stupid_Plugins/The Last Stand/l4d2_fix_changelevel/l4d2_fix_changelevel.txt", "/layers/l4dtoolz/serverfiles/left4dead2/addons/sourcemod/gamedata"]
+COPY --from=moyo ["/MoYu-Plugins-1.12/The Last Stand/l4d2_fix_changelevel/plugins/l4d2_fix_changelevel.smx", "/layers/l4dtoolz/serverfiles/left4dead2/addons/sourcemod/plugins"]
+COPY --from=moyo ["/MoYu-Plugins-1.12/The Last Stand/l4d2_fix_changelevel/gamedata/l4d2_fix_changelevel.txt", "/layers/l4dtoolz/serverfiles/left4dead2/addons/sourcemod/gamedata"]
 
 
 # COPY --from=unrar /addons /layers/8coop/serverfiles/left4dead2/addons
@@ -106,7 +106,12 @@ COPY --from=moyo ["/MoYu_Server_Stupid_Plugins/The Last Stand/l4d2_fix_changelev
 # Setup FastDL
 # COPY --from=scripts /scripts/auto-fastdl.sh /app/hooks/post-install/80-auto-fastdl.sh
 
+# Anonymous app_update of 222860 fails with "Invalid platform" until the
+# Windows depot has been fetched once. See scripts/scripts/l4d2-anonymous-install.sh.
+ADD scripts/scripts/l4d2-anonymous-install.sh /app/hooks/pre-install/40-l4d2-anonymous-install.sh
+
 # Setup metamod & sourcemod
+# v26.2.0 already pins MetaMod 1.12 and SourceMod 1.13 in mods_list.sh.
 ADD scripts/scripts/mod-install.sh /app/hooks/post-install/10-mod-install.sh
 ENV LGSM_HELPER_MODS=metamodsource,sourcemod
 

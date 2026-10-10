@@ -1,9 +1,18 @@
 #!/usr/bin/env bash
 set -eu -o pipefail
 
+# Prefer the daemon the current user can already access. The old check skipped
+# sudo only for the "gha" account; any other CI user hit a sudo password prompt
+# with no tty. Fall back to passwordless sudo when the user is not in the docker group.
 SUDO=''
-if [[ $EUID != 0 ]] && [[ "$USER" != "gha" ]]; then
-    SUDO='sudo'
+if [[ "${EUID}" -ne 0 ]] && ! docker info >/dev/null 2>&1; then
+    if sudo -n docker info >/dev/null 2>&1; then
+        SUDO='sudo'
+    else
+        echo "Docker is not usable as ${USER:-$(id -un)}, and passwordless sudo is unavailable." >&2
+        id >&2 || true
+        exit 1
+    fi
 fi
 
 build() {

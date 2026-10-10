@@ -9,7 +9,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - id: set-matrix
-        run: echo "matrix=$(cd images && ls -d * | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')" >> ${GITHUB_OUTPUT}
+        run: |
+          mapfile -t retired < <(grep -vE '^\s*(#|$)' .github/retired-images.txt)
+          cd images
+          dirs=$(ls -d */ | sed 's#/##')
+          for name in "${retired[@]}"; do
+            dirs=$(printf '%s\n' "$dirs" | grep -vx "$name" || true)
+          done
+          echo "matrix=$(printf '%s\n' "$dirs" | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')" >> "$GITHUB_OUTPUT"
   build-docker:
     needs: [ matrix ]
     strategy:
