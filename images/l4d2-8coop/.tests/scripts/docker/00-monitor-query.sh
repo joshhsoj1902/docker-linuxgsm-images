@@ -1,6 +1,6 @@
 #!/bin/bash
-# Run the same gamedig the LinuxGSM monitor uses, from inside the image.
-# The host test uses the runner's gamedig, which can still query protocol-valve.
+# Query with this image's gamedig and the querytype LinuxGSM actually loaded.
+# gamedig 5.3 can miss 127.0.0.1 while the host IP answers, so try every local address.
 set -eu
 
 cfgdir=/data/config-lgsm/l4d2server
@@ -17,9 +17,13 @@ read_setting() {
 
 for f in "$cfgdir/_default.cfg" "$cfgdir/common.cfg" "$cfgdir/l4d2server.cfg"; do
     val=$(read_setting "$f" querytype || true)
-    [ -n "$val" ] && querytype=$val
+    if [ -n "$val" ]; then
+        querytype=$val
+    fi
     val=$(read_setting "$f" port || true)
-    [ -n "$val" ] && port=$val
+    if [ -n "$val" ]; then
+        port=$val
+    fi
 done
 
 if [ -z "$querytype" ] || [ -z "$port" ]; then
@@ -27,11 +31,18 @@ if [ -z "$querytype" ] || [ -z "$port" ]; then
     exit 1
 fi
 
-echo "gamedig --type ${querytype} 127.0.0.1:${port}"
-raw=$(gamedig --type "$querytype" "127.0.0.1:${port}")
-echo "$raw"
-name=$(printf '%s\n' "$raw" | jq -r '.name // empty')
-if [ "$name" != "LinuxGSM" ]; then
-    echo "monitor query failed (name=${name:-empty})"
-    exit 1
-fi
+echo "effective querytype=${querytype} port=${port}"
+
+ips="$(hostname -I 2>/dev/null || true) 127.0.0.1"
+for ip in $ips; do
+    echo "gamedig --type ${querytype} ${ip}:${port}"
+    raw=$(gamedig --type "$querytype" "${ip}:${port}" || true)
+    echo "$raw"
+    name=$(printf '%s\n' "$raw" | jq -r '.name // empty' || true)
+    if [ "$name" = "LinuxGSM" ]; then
+        exit 0
+    fi
+done
+
+echo "monitor query failed for querytype=${querytype}"
+exit 1
