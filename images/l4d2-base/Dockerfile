@@ -3,8 +3,9 @@ FROM hairyhenderson/gomplate:v5.2.0@sha256:991ce1b8a1307fa32f9b8050a7b3396974646
 FROM gameservermanagers/gameserver:l4d2@sha256:241ab5d5d1536453ae000bcd00997f2dfe18fccc7d6bd5e688134d6ba8627519
 ARG IMAGE_DIR
 
-# Override entrypoint-user to support hooks
-ADD scripts/entrypoints/entrypoint-user.sh /app/entrypoint-user.sh
+# Insert pre/post install hook calls into the base image entrypoint.
+COPY scripts/inject-entrypoint-hooks.sh /tmp/inject-entrypoint-hooks.sh
+RUN bash /tmp/inject-entrypoint-hooks.sh && rm /tmp/inject-entrypoint-hooks.sh
 COPY --from=gomplate /gomplate /bin/gomplate
 
 # Install envsubt

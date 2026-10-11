@@ -8,8 +8,9 @@ ARG IMAGE_DIR
 RUN apt-get update && sudo apt install openjdk-21-jdk -y \
     && rm -rf /var/lib/apt/lists/*
 
-# Override entrypoint-user to support hooks
-ADD scripts/entrypoints/entrypoint-user.sh /app/entrypoint-user.sh
+# Insert pre/post install hook calls into the base image entrypoint.
+COPY scripts/inject-entrypoint-hooks.sh /tmp/inject-entrypoint-hooks.sh
+RUN bash /tmp/inject-entrypoint-hooks.sh && rm /tmp/inject-entrypoint-hooks.sh
 COPY --from=gomplate /gomplate /bin/gomplate
 
 RUN apt-get update && apt-get install -y \

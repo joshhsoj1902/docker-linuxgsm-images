@@ -6,8 +6,9 @@ RUN apt-get update && apt-get install -y \
     gettext-base \
     && rm -rf /var/lib/apt/lists/*
 
-# Override entrypoint-user to support hooks
-COPY --from=scripts /entrypoint-user.sh /app/entrypoint-user.sh
+# Insert pre/post install hook calls into the base image entrypoint.
+COPY --from=scripts /inject-entrypoint-hooks.sh /tmp/inject-entrypoint-hooks.sh
+RUN bash /tmp/inject-entrypoint-hooks.sh && rm /tmp/inject-entrypoint-hooks.sh
 
 # Setup FastDL
 COPY --from=scripts /scripts/auto-fastdl.sh /app/hooks/post-install/80-auto-fastdl.sh
