@@ -14,7 +14,8 @@
     "scripts/**/docker-compose.*",
     "images/minecraft-paper-base/**",
     "images/palworld-base/**",
-    "images/project-zomboid-base/**"
+    "images/project-zomboid-base/**",
+    "images/sdtd-a19/**"
   ],
 
   "packageRules": [
