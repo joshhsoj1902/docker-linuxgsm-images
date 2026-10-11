@@ -42,10 +42,11 @@ ADD https://github.com/fbef0102/L4D1_2-Plugins/releases/download/Multi-Colors/mu
 RUN unzip multicolors.zip
 
 # https://github.com/nosoop/SMExt-SourceScramble
+# SM 1.13.0.7451+ (LGSM pulls sourcemod-latest-linux for 1.13) needs the -api10 package.
 FROM ubuntu@sha256:f144425ff09be612d6d9ad965196e9cdc23dae1f42110a8a11a3e9a8198759f7 AS sourcescramble
-# renovate: datasource=github-tags depName=fbef0102/l4dtoolz versioning=semver-coerced
-ENV SOURCESCRAMBLE_VERSION=0.7.1.4
-ADD https://github.com/nosoop/SMExt-SourceScramble/releases/download/$SOURCESCRAMBLE_VERSION/package.tar.gz package.tar.gz
+# renovate: datasource=github-tags depName=nosoop/SMExt-SourceScramble versioning=semver-coerced
+ENV SOURCESCRAMBLE_VERSION=0.8.2.2
+ADD https://github.com/nosoop/SMExt-SourceScramble/releases/download/$SOURCESCRAMBLE_VERSION/package-api10.tar.gz package.tar.gz
 RUN tar -zxvf package.tar.gz
 
 # Discord logger
@@ -75,6 +76,8 @@ COPY --from=sourcescramble addons /layers/multicolors/serverfiles/left4dead2/add
 
 COPY --from=l4dplugins /L4D1_2-Plugins/l4dmultislots /layers/l4dtoolz/serverfiles/left4dead2/addons/sourcemod
 COPY --from=l4dplugins /L4D1_2-Plugins/l4dafkfix_deadbot /layers/l4dtoolz/serverfiles/left4dead2/addons/sourcemod
+# MultiSlots 7.4 requires HarryPotter's CreateSurvivorBot native/library (not the older Dragokas-only package).
+COPY --from=l4dplugins /L4D1_2-Plugins/l4d_CreateSurvivorBot /layers/l4dtoolz/serverfiles/left4dead2/addons/sourcemod
 
 # L4D2-Plugins was removed. The upgrade-pack fix now lives in L4D1_2-Plugins.
 COPY --from=l4dplugins /L4D1_2-Plugins/l4d_both_fixUpgradePack /layers/l4dtoolz/serverfiles/left4dead2/addons/sourcemod
