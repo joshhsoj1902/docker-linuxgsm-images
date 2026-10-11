@@ -63,8 +63,15 @@ test() {
 
         if [[ "$QUERY_MODE" == "gamedig" ]];
         then
-            GAMENAME=`gamedig --type $GAMEDIG_TYPE $HOST_IP:$GAMEDIG_PORT $HOST_IP | jq -r .name`
-            gamedig --type $GAMEDIG_TYPE $HOST_IP:$GAMEDIG_PORT $HOST_IP
+            # The monitor uses the gamedig baked into the image. A copy on the
+            # runner can be a different version and report a healthy server
+            # while that monitor is failing.
+            compose_file="images/${IMAGE_DIR}/.tests/docker-compose.yml"
+            if ! raw=$($SUDO docker compose -f "$compose_file" exec -T linuxgsm gamedig --type "$GAMEDIG_TYPE" "${HOST_IP}:${GAMEDIG_PORT}" "$HOST_IP"); then
+                echo "image gamedig query failed"
+            fi
+            printf '%s\n' "$raw"
+            GAMENAME=$(printf '%s\n' "$raw" | jq -r '.name // empty' || true)
 
             if [ "$GAMENAME" = "LinuxGSM" ];
             then
