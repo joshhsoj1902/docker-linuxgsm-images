@@ -1,12 +1,14 @@
 Hi Everyone!
 
-Press "y" to open chat
+Press "y" to open chat.
 
-Change campaign with "Call a vote" menu (hit Esc)
-Change map with "!maps" in chat. (supports custom campaigns)
-Change your character with "!csm" in chat.
-Change difficulty with "Call a vote" menu (hit Esc)
+Type "!setup" (or "!menu") for the setup menu:
+  campaign, game mode, difficulty, character,
+  or Gib Fest + Expert with a campaign picker.
 
-Change mode (mutation) by typing "!sm_votemode" in chat
+The menu also opens automatically a few seconds after you join.
 
-
+Other chat commands if you need them:
+  "!maps"  campaign / map
+  "!votemode"  game mode / mutation
+  "!csm"  change character
