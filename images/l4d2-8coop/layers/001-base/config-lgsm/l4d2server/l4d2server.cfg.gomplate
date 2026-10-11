@@ -6,3 +6,8 @@ port={{getenv "LGSM_SERVER_PORT" "27015"}}
 clientport={{getenv "LGSM_CLIENT_PORT" "27005"}}
 defaultmap={{getenv "LGSM_DEFAULT_MAP" "c5m1_waterfront"}}
 maxplayers={{getenv "LGSM_MAX_PLAYERS" "8"}}
+
+## Query mode
+# LinuxGSM defaults to protocol-valve. gamedig 5.3 in this image fails that
+# type, and the monitor then restarts a healthy server. Type l4d2 succeeds.
+querytype="{{getenv "LGSM_QUERYTYPE" "l4d2"}}"
