@@ -16,3 +16,4 @@ These directories stay in the repo. CI does not build or publish them, and Renov
 | `minecraft-paper-base` | [`itzg/minecraft-server`](https://github.com/itzg/docker-minecraft-server) |
 | `palworld-base` | [`thijsvanloef/palworld-server-docker`](https://github.com/thijsvanloef/palworld-server-docker) |
 | `project-zomboid-base` | [`indifferentbroccoli/projectzomboid-server-docker`](https://github.com/indifferentbroccoli/projectzomboid-server-docker) |
+| `sdtd-a19` | Alpha 19.6 does not start on the current Ubuntu 24.04 gameserver image. The directory stays for a local build. |

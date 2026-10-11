@@ -2,3 +2,4 @@
 minecraft-paper-base
 palworld-base
 project-zomboid-base
+sdtd-a19
