@@ -26,6 +26,8 @@ ADD scripts/scripts/l4d2-anonymous-install.sh /app/hooks/pre-install/40-l4d2-ano
 
 # Setup Layers
 ADD common/common.cfg.gomplate /layers/001-base/config-lgsm/l4d2server/
+# Loaded after _default.cfg. Overrides querytype=protocol-valve, which gamedig 5.3 cannot query.
+ADD images/l4d2-base/layers/001-base/config-lgsm/l4d2server/l4d2server.cfg.gomplate /layers/001-base/config-lgsm/l4d2server/l4d2server.cfg.gomplate
 
 ADD scripts/scripts/apply-overlay.sh /app/hooks/pre-install/50-apply-overlay.sh
 ADD scripts/scripts/apply-overlay.sh /app/hooks/post-install/50-apply-overlay.sh

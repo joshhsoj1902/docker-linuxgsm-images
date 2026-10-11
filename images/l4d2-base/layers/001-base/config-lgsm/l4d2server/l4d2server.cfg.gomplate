@@ -1,0 +1,4 @@
+## Query mode
+# LinuxGSM defaults to protocol-valve. gamedig 5.3 in this image fails that
+# type, and the monitor then restarts a healthy server. Type l4d2 succeeds.
+querytype="{{getenv "LGSM_QUERYTYPE" "l4d2"}}"
