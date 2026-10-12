@@ -1,0 +1,34 @@
+FROM hairyhenderson/gomplate:v5.2.0@sha256:991ce1b8a1307fa32f9b8050a7b339697464664236cfddb1c4079df4aa5f1cd4 AS gomplate
+
+FROM gameservermanagers/gameserver:sdtd@sha256:bc5fd43e30c4e7c80d85700fca86124c7fc7d318e472c9460e9e8ba3925d8a9e
+ARG IMAGE_DIR
+
+# Insert pre/post install hook calls into the base image entrypoint.
+COPY scripts/inject-entrypoint-hooks.sh /tmp/inject-entrypoint-hooks.sh
+RUN bash /tmp/inject-entrypoint-hooks.sh && rm /tmp/inject-entrypoint-hooks.sh
+COPY --from=gomplate /gomplate /bin/gomplate
+
+# Install envsubt
+RUN apt-get update && apt-get install -y \
+    gettext-base \
+    && rm -rf /var/lib/apt/lists/*
+
+# Setup Layers
+ADD images/$IMAGE_DIR/layers /layers
+ADD common/common.cfg.gomplate /layers/001-base/config-lgsm/sdtdserver/
+
+ADD scripts/scripts/apply-overlay.sh /app/hooks/pre-install/50-apply-overlay.sh
+ADD scripts/scripts/apply-overlay.sh /app/hooks/post-install/50-apply-overlay.sh
+ADD scripts/scripts/resolve-templates.sh /app/hooks/pre-install/51-resolve-templates.sh
+ADD scripts/scripts/resolve-templates.sh /app/hooks/post-install/51-resolve-templates.sh
+ENV LGSM_HELPER_GOMPLATE_EXTENSION=.gomplate
+ENV LGSM_HELPER_OVERLAY_SRC=/layers
+ENV LGSM_HELPER_OVERLAY_DEST=/data
+ENV LGSM_HELPER_TEMPLATE_EXTENSION=.overlay-template
+
+
+# ENV LGSM_GAME_WORLD=RNG
+# ENV LGSM_GAME_NAME="My Game"
+# V1 track: last published V1 branch on the dedicated server app.
+# https://steamdb.info/app/294420/depots/
+ENV LGSM_SERVER_BRANCH=v1.4
