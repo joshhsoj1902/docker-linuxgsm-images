@@ -4,14 +4,15 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#define PLUGIN_VERSION "0.1.0"
+#define PLUGIN_VERSION "0.2.0"
 
 ConVar g_hAutoOpen;
 ConVar g_hDelay;
 ConVar g_hOncePerConnect;
 ConVar g_hVoteTime;
 
-bool g_bShown[MAXPLAYERS + 1];
+// Survives chapter changelevel reconnects for the life of the plugin/server.
+StringMap g_ShownAuthIds;
 
 public Plugin myinfo =
 {
@@ -24,15 +25,22 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	g_ShownAuthIds = new StringMap();
+
 	g_hAutoOpen = CreateConVar("l4d2_setup_menu_auto", "1", "Open the setup menu automatically when a human joins (1/0)", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	g_hDelay = CreateConVar("l4d2_setup_menu_delay", "8.0", "Seconds after join before the setup menu opens", FCVAR_NOTIFY, true, 1.0, true, 60.0);
-	g_hOncePerConnect = CreateConVar("l4d2_setup_menu_once", "1", "Only auto-open once per connect (1/0)", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	g_hOncePerConnect = CreateConVar("l4d2_setup_menu_once", "1", "Only auto-open once per SteamID per server session (survives chapter reconnects) (1/0)", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	g_hVoteTime = CreateConVar("l4d2_setup_menu_vote_time", "15", "Seconds for difficulty votes", FCVAR_NOTIFY, true, 5.0, true, 60.0);
 
 	RegConsoleCmd("sm_setup", Command_Setup, "Open the L4D2 setup menu");
 	RegConsoleCmd("sm_menu", Command_Setup, "Open the L4D2 setup menu");
 
 	AutoExecConfig(true, "l4d2_setup_menu");
+}
+
+public void OnPluginEnd()
+{
+	delete g_ShownAuthIds;
 }
 
 public void OnConfigsExecuted()
@@ -51,9 +59,35 @@ public void OnConfigsExecuted()
 	}
 }
 
-public void OnClientDisconnect(int client)
+bool GetClientAuthKey(int client, char[] key, int maxlen)
 {
-	g_bShown[client] = false;
+	if (!GetClientAuthId(client, AuthId_Steam2, key, maxlen) || key[0] == '\0')
+	{
+		return false;
+	}
+	return true;
+}
+
+bool HasShownForClient(int client)
+{
+	char key[64];
+	if (!GetClientAuthKey(client, key, sizeof(key)))
+	{
+		return false;
+	}
+
+	bool shown;
+	return g_ShownAuthIds.GetValue(key, shown) && shown;
+}
+
+void MarkShownForClient(int client)
+{
+	char key[64];
+	if (!GetClientAuthKey(client, key, sizeof(key)))
+	{
+		return;
+	}
+	g_ShownAuthIds.SetValue(key, true);
 }
 
 public void OnClientPutInServer(int client)
@@ -68,7 +102,7 @@ public void OnClientPutInServer(int client)
 		return;
 	}
 
-	if (g_hOncePerConnect.BoolValue && g_bShown[client])
+	if (g_hOncePerConnect.BoolValue && HasShownForClient(client))
 	{
 		return;
 	}
@@ -84,12 +118,23 @@ public Action Timer_AutoOpen(Handle timer, any userid)
 		return Plugin_Stop;
 	}
 
-	if (g_hOncePerConnect.BoolValue && g_bShown[client])
+	if (g_hOncePerConnect.BoolValue && HasShownForClient(client))
 	{
 		return Plugin_Stop;
 	}
 
-	g_bShown[client] = true;
+	// Auth can lag slightly after PutInServer; wait until SteamID is available.
+	if (g_hOncePerConnect.BoolValue)
+	{
+		char key[64];
+		if (!GetClientAuthKey(client, key, sizeof(key)))
+		{
+			CreateTimer(1.0, Timer_AutoOpen, userid, TIMER_FLAG_NO_MAPCHANGE);
+			return Plugin_Stop;
+		}
+	}
+
+	MarkShownForClient(client);
 	ShowSetupMenu(client);
 	return Plugin_Stop;
 }
