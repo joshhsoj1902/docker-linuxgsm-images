@@ -29,5 +29,7 @@ ENV LGSM_HELPER_TEMPLATE_EXTENSION=.overlay-template
 
 # ENV LGSM_GAME_WORLD=RNG
 # ENV LGSM_GAME_NAME="My Game"
-# https://steamdb.info/app/251570/depots/
-# ENV LGSM_SERVER_BRANCH=alpha21.1
+# Current stable is V3.x on the default public branch (app 294420).
+# https://steamdb.info/app/294420/depots/
+# For Steam branch v1.4 use the sdtd-v1 image instead.
+# ENV LGSM_SERVER_BRANCH=public

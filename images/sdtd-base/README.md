@@ -1,4 +1,8 @@
-# 7DaysToDie
+# 7 Days to Die (current / V3)
+
+This image tracks the current stable dedicated server (`public` / V3.x). Gameplay options that used to be individual `serverconfig.xml` properties now live in `SandboxCode` (`LGSM_SANDBOX_CODE`).
+
+For the last V1 Steam branch (`v1.4`) and the pre-SandboxCode serverconfig template, use `sdtd-v1` instead. Older alphas stay on `sdtd-a21` / `sdtd-a19`.
 
 ## Gotchas
 
