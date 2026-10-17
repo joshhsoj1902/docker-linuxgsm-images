@@ -1,7 +1,7 @@
 FROM hairyhenderson/gomplate:v5.2.0@sha256:991ce1b8a1307fa32f9b8050a7b339697464664236cfddb1c4079df4aa5f1cd4 AS gomplate
 
 # https://forums.alliedmods.net/showthread.php?t=39439
-FROM ubuntu@sha256:f144425ff09be612d6d9ad965196e9cdc23dae1f42110a8a11a3e9a8198759f7 AS stripper
+FROM ubuntu@sha256:c098726dd9b9733f3e885f8de0ef375206a311b0a317eadc40d347b1115fb944 AS stripper
 ADD http://www.bailopan.net/stripper/snapshots/1.2/stripper-1.2.2-git141-linux.tar.gz stripper.tar.gz
 RUN tar -zxvf stripper.tar.gz
 
@@ -43,7 +43,7 @@ RUN unzip multicolors.zip
 
 # https://github.com/nosoop/SMExt-SourceScramble
 # SM 1.13.0.7451+ (LGSM pulls sourcemod-latest-linux for 1.13) needs the -api10 package.
-FROM ubuntu@sha256:f144425ff09be612d6d9ad965196e9cdc23dae1f42110a8a11a3e9a8198759f7 AS sourcescramble
+FROM ubuntu@sha256:c098726dd9b9733f3e885f8de0ef375206a311b0a317eadc40d347b1115fb944 AS sourcescramble
 # renovate: datasource=github-tags depName=nosoop/SMExt-SourceScramble versioning=semver-coerced
 ENV SOURCESCRAMBLE_VERSION=0.8.2.2
 ADD https://github.com/nosoop/SMExt-SourceScramble/releases/download/$SOURCESCRAMBLE_VERSION/package-api10.tar.gz package.tar.gz
