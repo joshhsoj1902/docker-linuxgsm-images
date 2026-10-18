@@ -1,4 +1,4 @@
-FROM hairyhenderson/gomplate:v5.2.0@sha256:991ce1b8a1307fa32f9b8050a7b339697464664236cfddb1c4079df4aa5f1cd4 AS gomplate
+FROM hairyhenderson/gomplate:v5.3.0@sha256:40307f53fa8d6133c5bac8264b5cb4f6ceb3ce02e1d57c33e100959967f6fd18 AS gomplate
 
 FROM gameservermanagers/gameserver:sf@sha256:78c4ce0c403e6712dba340f2c5b8b2a0b9351c78e972435554ca4acd061c5e29
 ARG IMAGE_DIR
