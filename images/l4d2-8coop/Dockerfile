@@ -53,7 +53,7 @@ RUN tar -zxvf package.tar.gz
 FROM bitnami/git@sha256:381747741f3aba9e1818d6e1f16acd267391957efc7fbd0db55c59da4854885b AS discord
 RUN git clone https://github.com/Mbk10201/Discord_loggerv2.git
 
-FROM gameservermanagers/gameserver:l4d2@sha256:89894c11db8409c17f2e716b4d7e0708256457121740dfa7b56ff4ad428c968d
+FROM gameservermanagers/gameserver:l4d2@sha256:82e2f5a8462fca4c17a5f03b383800adfeeea4ed42a85fd41d56a67c7072f733
 ARG IMAGE_DIR
 
 # Insert pre/post install hook calls into the base image entrypoint.
