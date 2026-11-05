@@ -1,6 +1,6 @@
 FROM hairyhenderson/gomplate:v5.3.1@sha256:9c73c3cacc598cc9d926c67c5548901a4a4ee2223d29a2dacc910a68a5dfd684 AS gomplate
 
-FROM gameservermanagers/gameserver:fctr@sha256:376a56c10282050a134e2c8cb2d776ece23dda5bd2903e51192dcff149919697
+FROM gameservermanagers/gameserver:fctr@sha256:fa0d3110afef59e099982b4317348b4294643ac76afac71bf8343f8433222342
 ARG IMAGE_DIR
 
 # Insert pre/post install hook calls into the base image entrypoint.
