@@ -18,16 +18,16 @@ ARG IMAGE_DIR
 ADD images/$IMAGE_DIR/l4dtools /
 
 # https://github.com/SilvDev/Left4DHooks
-FROM bitnami/git@sha256:9a50a1012091e0f8bc437477a38a834d435bfe6c9c499e85f3286bd82ac2765f AS left4dhooks
+FROM bitnami/git@sha256:dc62f8644aed95ddf12f8142399e1dbdc76f14f42a744030f8c57824c607b3aa AS left4dhooks
 RUN git clone https://github.com/SilvDev/Left4DHooks.git
 
 # https://github.com/fbef0102/L4D1_2-Plugins/tree/master
 # l4d_both_fixUpgradePack used to live in the deleted L4D2-Plugins repo.
-FROM bitnami/git@sha256:9a50a1012091e0f8bc437477a38a834d435bfe6c9c499e85f3286bd82ac2765f AS l4dplugins
+FROM bitnami/git@sha256:dc62f8644aed95ddf12f8142399e1dbdc76f14f42a744030f8c57824c607b3aa AS l4dplugins
 RUN git clone --depth 1 https://github.com/fbef0102/L4D1_2-Plugins.git
 
 # https://github.com/LuxLuma/Left-4-fix
-FROM bitnami/git@sha256:9a50a1012091e0f8bc437477a38a834d435bfe6c9c499e85f3286bd82ac2765f AS left4fix
+FROM bitnami/git@sha256:dc62f8644aed95ddf12f8142399e1dbdc76f14f42a744030f8c57824c607b3aa AS left4fix
 RUN git clone https://github.com/LuxLuma/Left-4-fix.git
 
 # The git tree no longer commits the compiled plugin. Releases publish it.
@@ -50,7 +50,7 @@ ADD https://github.com/nosoop/SMExt-SourceScramble/releases/download/$SOURCESCRA
 RUN tar -zxvf package.tar.gz
 
 # Discord logger
-FROM bitnami/git@sha256:9a50a1012091e0f8bc437477a38a834d435bfe6c9c499e85f3286bd82ac2765f AS discord
+FROM bitnami/git@sha256:dc62f8644aed95ddf12f8142399e1dbdc76f14f42a744030f8c57824c607b3aa AS discord
 RUN git clone https://github.com/Mbk10201/Discord_loggerv2.git
 
 FROM gameservermanagers/gameserver:l4d2@sha256:638968f9d963b2d19988e594af306870b46f08c39d56b3bc18943495263c27f8
