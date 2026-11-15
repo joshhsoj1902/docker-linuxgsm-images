@@ -1,4 +1,4 @@
-#define PLUGIN_VERSION "3.7"
+#define PLUGIN_VERSION "3.8"
 
 #pragma semicolon 1
 #pragma newdecls required
@@ -98,6 +98,7 @@ bool g_bVoteDisplayed;
 bool g_bUMHooked;
 bool g_bLateload;
 bool g_bDedicated;
+bool g_bFinaleVoteOpen;
 bool g_bVipCoreLib;
 bool g_bEmptyMapCycleCustom;
 bool g_bMapStarted;
@@ -136,6 +137,7 @@ ConVar g_hCvarVetoFlag;
 ConVar g_hCvarRemoveMarkFlag;
 ConVar g_hCvarChapterList;
 ConVar g_hCvarFinaleChangeType;
+ConVar g_hCvarFinaleVote;
 ConVar g_hCvarServerPrintInfo;
 ConVar g_hCvarNativeVoteChangeMissionAllow;
 ConVar g_hCvarNativeVoteChangeChapterAllow;
@@ -194,6 +196,7 @@ public void OnPluginStart()
 	g_hCvarNextMapOnCustom = CreateConVar(		"l4d_mapchanger_nextmap_on_custom", 	"3", 		"Which next campaign to use (on finale chapter of custom campaign)? (0 - next standard, 1 - random standard, 2 - next custom, 3 - random custom)", CVAR_FLAGS);
 	g_hCvarChapterList = CreateConVar(			"l4d_mapchanger_show_chapter_list", 	"1", 		"Show the list of chapters within campaign? (1 - Yes, 0 - No)", CVAR_FLAGS);
 	g_hCvarFinaleChangeType = CreateConVar(		"l4d_mapchanger_finale_change_type", 	"12", 		"0 - Don't change finale map (drop to lobby); 1 - instant on vehicle leaving; 2 - instant on finale win; 4 - Wait till credits screen appear; 8 - Wait till credits screen ends", CVAR_FLAGS);
+	g_hCvarFinaleVote = CreateConVar(			"l4d_mapchanger_finale_vote",			"1",		"After finale credits: open map vote menus instead of auto-changing (1 - Yes, 0 - No). Blocks lobby drop until a map is chosen.", CVAR_FLAGS);
 	g_hCvarServerPrintInfo = CreateConVar(		"l4d_mapchanger_server_print_info", 	"1", 		"Print map change info to server console? (1 - Yes, 0 - No)", CVAR_FLAGS);
 	g_hCvarMapChangeNotifyTime = CreateConVar(	"l4d_mapchanger_mapchange_notify_time", "2", 		"Number of seconds to display notify message before the actual change map", CVAR_FLAGS);
 	
@@ -454,6 +457,12 @@ void FinaleMapChange_Frame()
 
 public Action OnDisconnectToLobby(UserMsg msg_id, BfRead hMsg, const int[] players, int playersNum, bool reliable, bool init)
 {
+	if( g_hCvarFinaleVote.BoolValue )
+	{
+		// Stay on the finale until someone picks the next map.
+		OpenFinaleMapMenus();
+		return Plugin_Handled;
+	}
 	if( g_hCvarFinaleChangeType.IntValue & FINALE_CHANGE_CREDITS_END )
 	{
 		GotoNextMap(true);
@@ -529,6 +538,7 @@ public void OnMapStart()
 	}
 	CreateTimer(5.0, Timer_ChangeHostName, _, TIMER_FLAG_NO_MAPCHANGE);
 	g_bUMHooked = false;
+	g_bFinaleVoteOpen = false;
 	
 	g_bIsFinale = IsFinaleMap(g_sCurMap); // assume, database is already populated
 }
@@ -1627,7 +1637,7 @@ void CheckVoteMap(int client, char[] map, bool bIsCustom)
 		{
 			float fCurTime = GetEngineTime();
 		
-			if( g_fLastTime[client] != 0 && !IsClientRootAdmin(client) )
+			if( !g_bFinaleVoteOpen && g_fLastTime[client] != 0 && !IsClientRootAdmin(client) )
 			{
 				if ( g_fLastTime[client] + g_hCvarDelay.FloatValue > fCurTime ) {
 					PrintToChat(client, "\x03[MapChanger]\x05 %t", "too_often"); // "You can't vote too often!"
@@ -1767,14 +1777,28 @@ void Handler_PostVoteAction(bool bVoteSuccess)
 {
 	if( bVoteSuccess )
 	{
+		g_bFinaleVoteOpen = false;
 		LogVoteAction(-1, "[ACCEPTED] Vote for map: %s", g_sVoteResult);
 		L4D_ChangeLevel(g_sVoteResult);
 	}
 	else {
 		LogVoteAction(-1, "[NOT ACCEPTED] Vote for map.");
 		CPrintToChatAll("%t", "vote_failed");
+		if( g_bFinaleVoteOpen )
+		{
+			CreateTimer(2.0, Timer_ReopenFinaleMenus, _, TIMER_FLAG_NO_MAPCHANGE);
+		}
 	}
 	g_bVoteInProgress = false;
+}
+
+Action Timer_ReopenFinaleMenus(Handle timer)
+{
+	if( g_bFinaleVoteOpen )
+	{
+		OpenFinaleMapMenus(true);
+	}
+	return Plugin_Stop;
 }
 
 void StartVoteMark(int client, char[] sCampaign)
@@ -1990,7 +2014,35 @@ bool L4D_ChangeLevel(char[] sMapName, bool bInstantChange = false)
 
 void FinaleMapChange()
 {
+	if( g_hCvarFinaleVote.BoolValue )
+	{
+		OpenFinaleMapMenus();
+		return;
+	}
 	GotoNextMap();
+}
+
+void OpenFinaleMapMenus(bool bForce = false)
+{
+	static int iLastOpen;
+	int now = GetTime();
+	if( !bForce && iLastOpen != 0 && now - iLastOpen <= 8 )
+	{
+		return;
+	}
+	iLastOpen = now;
+	g_bFinaleVoteOpen = true;
+	
+	PrintToChatAll("\x03[MapChanger]\x05 Campaign complete — vote for the next map!");
+	PrintCenterTextAll("Vote for the next campaign");
+	
+	for( int i = 1; i <= MaxClients; i++ )
+	{
+		if( IsClientInGame(i) && !IsFakeClient(i) )
+		{
+			Menu_ChooseMap(i);
+		}
+	}
 }
 
 void GotoNextMap(bool bInstantChange = false)
@@ -3019,6 +3071,10 @@ bool CanVote(int client, bool bIsCustom)
 	if( InDenyFile(client, g_hArrayVoteBlock) )
 	{
 		return false;
+	}
+	if( g_bFinaleVoteOpen )
+	{
+		return true;
 	}
 	int iUserFlag = GetUserFlagBits(client);
 	if( iUserFlag & ADMFLAG_ROOT != 0 ) return true;
