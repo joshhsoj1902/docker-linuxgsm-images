@@ -5,7 +5,12 @@ ip={{getenv "LGSM_IP" "0.0.0.0"}}
 port={{getenv "LGSM_SERVER_PORT" "27015"}}
 clientport={{getenv "LGSM_CLIENT_PORT" "27005"}}
 defaultmap={{getenv "LGSM_DEFAULT_MAP" "c5m1_waterfront"}}
-maxplayers={{getenv "LGSM_MAX_PLAYERS" "8"}}
+## Engine client cap (survivors + SI bots + tanks). Human join limit is sv_maxplayers
+## in cfg/l4d2server.cfg (l4dtoolz). Multislots expects MaxClients >= 31.
+maxplayers={{getenv "LGSM_ENGINE_MAX_PLAYERS" "31"}}
+## Override default LGSM start line so l4dtoolz gets +sv_setmax (otherwise MaxClients
+## stays at 8 and finale tanks fail to spawn when survivor slots are full).
+startparameters="-game left4dead2 -strictportbind -ip ${ip} -port ${port} +clientport ${clientport} +map ${defaultmap} +servercfgfile ${servercfg} -maxplayers ${maxplayers} +sv_setmax ${maxplayers}"
 
 ## Query mode
 # LinuxGSM defaults to protocol-valve. gamedig 5.3 in this image fails that

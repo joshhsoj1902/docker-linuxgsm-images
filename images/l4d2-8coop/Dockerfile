@@ -92,6 +92,12 @@ COPY --from=left4fix ["/Left-4-fix/left 4 fix/witch/witch_target_patch", "/layer
 COPY --from=moyo ["/MoYu-Plugins-1.12/The Last Stand/l4d2_fix_changelevel/plugins/l4d2_fix_changelevel.smx", "/layers/l4dtoolz/serverfiles/left4dead2/addons/sourcemod/plugins"]
 COPY --from=moyo ["/MoYu-Plugins-1.12/The Last Stand/l4d2_fix_changelevel/gamedata/l4d2_fix_changelevel.txt", "/layers/l4dtoolz/serverfiles/left4dead2/addons/sourcemod/gamedata"]
 
+# Prevents finale tank stages (Death Toll / No Mercy style custom finales) from
+# advancing when the director fails to create a tank. Needs MaxClients headroom
+# from +sv_setmax (see layers/001-base config-lgsm startparameters).
+COPY --from=moyo ["/MoYu-Plugins-1.12/The Last Stand/l4d2_scripted_tank_stage_fix/plugins/l4d2_scripted_tank_stage_fix.smx", "/layers/l4dtoolz/serverfiles/left4dead2/addons/sourcemod/plugins"]
+COPY --from=moyo ["/MoYu-Plugins-1.12/The Last Stand/l4d2_scripted_tank_stage_fix/gamedata/l4d2_scripted_tank_stage_fix.txt", "/layers/l4dtoolz/serverfiles/left4dead2/addons/sourcemod/gamedata"]
+
 
 # COPY --from=unrar /addons /layers/8coop/serverfiles/left4dead2/addons
 # COPY --from=unrar /cfg /layers/8coop/serverfiles/left4dead2/cfg
