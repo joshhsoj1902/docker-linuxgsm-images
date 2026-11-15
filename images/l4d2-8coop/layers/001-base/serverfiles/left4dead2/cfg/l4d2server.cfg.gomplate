@@ -14,8 +14,9 @@ sv_logecho 1
 sv_logfile 1
 sv_log_onefile 0
 
-sv_maxplayers 8 // 8 players can join the server, set number whatever you like (range 4 to 30)
-sv_visiblemaxplayers 8 //number is same as above
+// Human join limit (l4dtoolz). Engine MaxClients comes from +sv_setmax / -maxplayers.
+sv_maxplayers {{getenv "LGSM_MAX_PLAYERS" "8"}}
+sv_visiblemaxplayers {{getenv "LGSM_MAX_PLAYERS" "8"}}
 sv_force_unreserved 1 //your server will stay unreserved and allow players to connect using connect command, this command sets sv_allow_lobby_connect_only 0.
 sv_allow_lobby_connect_only 0 // 1=Only join server from lobby.
 sm_cvar precache_all_survivors 1 // Precache/Load all models of survivors to prevent crash
