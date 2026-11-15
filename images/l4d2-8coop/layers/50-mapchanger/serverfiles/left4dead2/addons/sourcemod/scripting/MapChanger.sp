@@ -1,4 +1,4 @@
-#define PLUGIN_VERSION "3.8"
+#define PLUGIN_VERSION "3.8.1"
 
 #pragma semicolon 1
 #pragma newdecls required
@@ -459,8 +459,9 @@ public Action OnDisconnectToLobby(UserMsg msg_id, BfRead hMsg, const int[] playe
 {
 	if( g_hCvarFinaleVote.BoolValue )
 	{
-		// Stay on the finale until someone picks the next map.
-		OpenFinaleMapMenus();
+		// Block lobby kick first. Do not PrintToChat / DisplayMenu here — that
+		// throws "Could not send a usermessage" mid-hook and skips Plugin_Handled.
+		RequestFrame(Frame_OpenFinaleMapMenus);
 		return Plugin_Handled;
 	}
 	if( g_hCvarFinaleChangeType.IntValue & FINALE_CHANGE_CREDITS_END )
@@ -469,6 +470,11 @@ public Action OnDisconnectToLobby(UserMsg msg_id, BfRead hMsg, const int[] playe
 		return Plugin_Handled;
 	}
 	return Plugin_Continue;
+}
+
+void Frame_OpenFinaleMapMenus()
+{
+	OpenFinaleMapMenus();
 }
 
 void ReadFileToArrayList(char[] sPath, ArrayList list)
